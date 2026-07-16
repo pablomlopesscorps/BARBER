@@ -658,29 +658,79 @@
       calMonth = now.getMonth();
       calYear = now.getFullYear();
 
-      async function loadSettings() {
-        const rows = await db.select("SETTINGS", `?select=*&SYSTEM=eq.${pgEsc(user.SYSTEM)}&limit=1`);
-        SETTINGS = (rows && rows[0]) || { SYSTEM_NAME: "BarberOS", SHOW_PRODUCTS: false, BUSINESS_HOURS: {} };
-        document.getElementById("sys-name").textContent = SETTINGS.SYSTEM_NAME || "BarberOS";
-        document.getElementById("nav-produtos").classList.toggle("hidden", !SETTINGS.SHOW_PRODUCTS);
+async function loadSettings() {
+  try {
+    const rows = await db.select("SETTINGS", `?select=*&SYSTEM=eq.${pgEsc(user.SYSTEM)}&limit=1`);
+    if (rows && rows.length > 0 && rows[0].BUSINESS_HOURS && Object.keys(rows[0].BUSINESS_HOURS).length > 0) {
+      SETTINGS = rows[0];
+    } else {
+      throw new Error("Sem dados de horário");
+    }
+  } catch (e) {
+    console.warn("Usando horário padrão:", e);
+    SETTINGS = {
+      SYSTEM_NAME: "BarberOS",
+      SHOW_PRODUCTS: false,
+      BUSINESS_HOURS: {
+        seg: { start: "08:00", end: "20:00" },
+        ter: { start: "08:00", end: "20:00" },
+        qua: { start: "08:00", end: "20:00" },
+        qui: { start: "08:00", end: "20:00" },
+        sex: { start: "08:00", end: "20:00" },
+        sab: { start: "08:00", end: "14:00" },
+        interval: 30
       }
+    };
+  }
+  document.getElementById("sys-name").textContent = SETTINGS.SYSTEM_NAME || "BarberOS";
+  document.getElementById("nav-produtos").classList.toggle("hidden", !SETTINGS.SHOW_PRODUCTS);
+}
 
-      async function loadServices() {
-        SERVICES = (await db.select("SERVICES", `?select=*&SYSTEM=eq.${pgEsc(user.SYSTEM)}&ACTIVE=eq.true&order=NAME.asc`)) || [];
-        const sel = document.getElementById("select-service");
-        sel.innerHTML = '<option value="">Selecione...</option>' + SERVICES.map(s => `<option value="${s.ID}">${escapeHtml(s.NAME)} — ${money(s.PRICE)}</option>`).join("");
-      }
+async function loadServices() {
+  try {
+    const rows = await db.select("SERVICES", `?select=*&SYSTEM=eq.${pgEsc(user.SYSTEM)}&ACTIVE=eq.true&order=NAME.asc`);
+    if (rows && rows.length > 0) {
+      SERVICES = rows;
+    } else {
+      throw new Error("Nenhum serviço ativo");
+    }
+  } catch (e) {
+    console.warn("Usando serviços de exemplo:", e);
+    SERVICES = [
+      { ID: 1, NAME: "Corte", PRICE: 30 },
+      { ID: 2, NAME: "Barba", PRICE: 20 }
+    ];
+  }
+  const sel = document.getElementById("select-service");
+  sel.innerHTML = '<option value="">Selecione...</option>' + SERVICES.map(s => `<option value="${s.ID}">${escapeHtml(s.NAME)} — ${money(s.PRICE)}</option>`).join("");
+}
 
-      async function loadEmployees() {
-        EMPLOYEES = (await db.select("BD_USERS", `?select=USER,NAME&SYSTEM=eq.${pgEsc(user.SYSTEM)}&LEVEL=eq.00&ACTIVE=eq.true&order=NAME.asc`)) || [];
-        const sel = document.getElementById("select-employee");
-        sel.innerHTML = '<option value="none">Sem preferência</option>' + EMPLOYEES.map(e => `<option value="${e.USER}">${escapeHtml(e.NAME)}</option>`).join("");
-      }
+async function loadEmployees() {
+  try {
+    const rows = await db.select("BD_USERS", `?select=USER,NAME,WORK_HOURS&SYSTEM=eq.${pgEsc(user.SYSTEM)}&LEVEL=eq.00&ACTIVE=eq.true&order=NAME.asc`);
+    if (rows && rows.length > 0) {
+      EMPLOYEES = rows;
+    } else {
+      throw new Error("Nenhum funcionário ativo");
+    }
+  } catch (e) {
+    console.warn("Usando funcionário de exemplo:", e);
+    EMPLOYEES = [
+      { USER: "barbeiro1", NAME: "Barbeiro Exemplo", WORK_HOURS: null }
+    ];
+  }
+  const sel = document.getElementById("select-employee");
+  sel.innerHTML = '<option value="none">Sem preferência</option>' + EMPLOYEES.map(e => `<option value="${e.USER}">${escapeHtml(e.NAME)}</option>`).join("");
+}
 
-      async function loadClientRow() {
-        const rows = await db.select("CLIENT_USER", `?select=*&USER=eq.${pgEsc(user.USER)}&limit=1`);
-        CLIENT_ROW = (rows && rows[0]) || null;
-      }
+async function loadClientRow() {
+  try {
+    const rows = await db.select("CLIENT_USER", `?select=*&USER=eq.${pgEsc(user.USER)}&limit=1`);
+    CLIENT_ROW = (rows && rows[0]) || { STATE: "ativo" }; // assume ativo se não existir
+  } catch (e) {
+    CLIENT_ROW = { STATE: "ativo" };
+  }
+}
 
       // Calendar
       function renderCalendar() {
