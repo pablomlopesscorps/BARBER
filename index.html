@@ -3,46 +3,31 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BarberOS · Gestão Inteligente</title>
+  <title>BarberOS</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
   <style>
     /* ========== CSS COMPLETO ========== */
     @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
 
     :root {
-      --bg: #0A0A0A;
-      --surface: #141414;
-      --surface-2: #1E1E1E;
-      --surface-3: #2A2A2A;
-      --border: #2E2E2E;
-      --gold: #C99B4A;
-      --gold-soft: #E4C480;
-      --gold-dim: rgba(201,155,74,.15);
-      --blue: #3B82F6;
-      --blue-soft: #60A5FA;
-      --blue-dim: rgba(59,130,246,.15);
-      --red: #EF4444;
-      --red-soft: #F87171;
-      --red-dim: rgba(239,68,68,.15);
-      --text: #F5F5F5;
-      --text-muted: #A3A3A3;
-      --text-faint: #6B6B6B;
-      --radius-lg: 18px;
-      --radius: 12px;
-      --radius-sm: 8px;
-      --shadow: 0 12px 32px rgba(0,0,0,.5);
-      --shadow-sm: 0 4px 14px rgba(0,0,0,.4);
-      --font-display: 'Oswald', sans-serif;
-      --font-body: 'Inter', sans-serif;
-      --font-mono: 'IBM Plex Mono', monospace;
+      --bg: #14120F; --surface: #1C1914; --surface-2: #242019; --surface-3: #2B2620; --border: #332D24;
+      --gold: #C99B4A; --gold-soft: #E4C480; --gold-dim: rgba(201,155,74,.15);
+      --green: #3A5C49; --green-soft: #5C8A70; --red: #B94A3D; --red-soft: #D97363;
+      --text: #F4EFE6; --text-muted: #A79E8F; --text-faint: #786F60;
+      --radius-lg: 18px; --radius: 12px; --radius-sm: 8px;
+      --shadow: 0 12px 32px rgba(0,0,0,.4); --shadow-sm: 0 4px 14px rgba(0,0,0,.3);
+      --font-display: 'Oswald', sans-serif; --font-body: 'Inter', sans-serif; --font-mono: 'IBM Plex Mono', monospace;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    html, body { height: 100%; background: var(--bg); color: var(--text); font-family: var(--font-body); font-size: 15px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
+    html, body { height: 100%; }
+    body {
+      background: var(--bg); color: var(--text); font-family: var(--font-body); font-size: 15px; line-height: 1.5; -webkit-font-smoothing: antialiased;
+    }
     body::before {
       content: ''; position: fixed; inset: 0;
       background: radial-gradient(circle at 15% 0%, rgba(201,155,74,.06), transparent 45%),
-                  radial-gradient(circle at 90% 20%, rgba(59,130,246,.05), transparent 50%);
+                  radial-gradient(circle at 90% 20%, rgba(58,92,73,.08), transparent 50%);
       pointer-events: none; z-index: 0;
     }
     h1, h2, h3, h4 { font-family: var(--font-display); font-weight: 600; letter-spacing: .3px; color: var(--text); }
@@ -53,14 +38,14 @@
 
     .stripe-bar {
       height: 4px; width: 100%; border-radius: 4px; overflow: hidden; position: relative;
-      background: repeating-linear-gradient(115deg, var(--gold) 0 14px, var(--blue) 14px 28px, var(--text) 28px 42px);
+      background: repeating-linear-gradient(115deg, var(--gold) 0 14px, var(--green) 14px 28px, var(--text) 28px 42px);
       background-size: 200% 100%; animation: stripe-drift 6s linear infinite; opacity: .9;
     }
     @keyframes stripe-drift { to { background-position: -84px 0; } }
     .stripe-underline { position: relative; }
     .stripe-underline::after {
       content: ''; position: absolute; left: 0; bottom: -6px; height: 3px; width: 0; border-radius: 3px;
-      background: repeating-linear-gradient(115deg, var(--gold) 0 10px, var(--blue) 10px 20px, var(--text) 20px 30px);
+      background: repeating-linear-gradient(115deg, var(--gold) 0 10px, var(--green) 10px 20px, var(--text) 20px 30px);
       background-size: 120% 100%; transition: width .25s ease;
     }
     .nav-item.active .stripe-underline::after { width: 100%; }
@@ -82,24 +67,28 @@
     .nav-item.active { background: var(--surface-2); color: var(--gold-soft); }
     .nav-spacer { flex: 1; }
     .nav-item.logout { color: var(--red-soft); }
-    .nav-item.logout:hover { background: rgba(239,68,68,.12); }
+    .nav-item.logout:hover { background: rgba(185,74,61,.12); }
 
     .main { flex: 1; display: flex; flex-direction: column; min-width: 0; }
     .topbar {
       display: flex; align-items: center; justify-content: space-between; padding: 18px 30px;
-      border-bottom: 1px solid var(--border); background: rgba(20,20,20,.7); backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border); background: rgba(28,25,20,.7); backdrop-filter: blur(10px);
       position: sticky; top: 0; z-index: 20;
     }
     .topbar-title { font-family: var(--font-display); font-size: 19px; font-weight: 600; }
     .topbar-title span { color: var(--text-faint); font-family: var(--font-body); font-size: 12px; display: block; font-weight: 400; letter-spacing: .5px; text-transform: uppercase; margin-top: 2px; }
     .topbar-right { display: flex; align-items: center; gap: 18px; }
+
     .bell-wrap { position: relative; }
     .bell-btn {
       width: 40px; height: 40px; border-radius: 50%; background: var(--surface-2); border: 1px solid var(--border);
-      display: flex; align-items: center; justify-content: center; color: var(--text-muted); transition: .15s;
+      display: flex; align-items: center; justify-content: center; color: var(--text-muted); position: relative; transition: .15s;
     }
     .bell-btn:hover { color: var(--gold-soft); border-color: var(--gold); }
-    .bell-dot { position: absolute; top: 6px; right: 7px; width: 9px; height: 9px; border-radius: 50%; background: var(--red-soft); border: 2px solid var(--surface); display: none; }
+    .bell-dot {
+      position: absolute; top: 6px; right: 7px; width: 9px; height: 9px; border-radius: 50%;
+      background: var(--red-soft); border: 2px solid var(--surface); display: none;
+    }
     .bell-dot.show { display: block; }
     .notif-panel {
       position: absolute; right: 0; top: 52px; width: 340px; max-height: 420px; overflow: auto;
@@ -110,16 +99,17 @@
     .notif-header { padding: 14px 16px; border-bottom: 1px solid var(--border); font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: .5px; color: var(--text-muted); }
     .notif-item { padding: 13px 16px; border-bottom: 1px solid var(--border); font-size: 13.5px; color: var(--text-muted); }
     .notif-item:last-child { border-bottom: none; }
-    .notif-item.unread { color: var(--text); background: var(--gold-dim); }
+    .notif-item.unread { color: var(--text); background: rgba(201,155,74,.06); }
     .notif-item .notif-time { display: block; margin-top: 4px; font-size: 11px; color: var(--text-faint); font-family: var(--font-mono); }
-    .notif-empty { padding: 30px 16px; text-align: center; color: var(--text-faint); }
+    .notif-empty { padding: 30px 16px; text-align: center; color: var(--text-faint); font-size: 13px; }
 
     .avatar-chip { display: flex; align-items: center; gap: 10px; padding: 6px 10px 6px 6px; border-radius: 999px; background: var(--surface-2); border: 1px solid var(--border); }
-    .avatar-circle { width: 30px; height: 30px; border-radius: 50%; background: linear-gradient(135deg,var(--gold),var(--blue)); display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-weight: 700; font-size: 13px; color: #0A0A0A; }
+    .avatar-circle { width: 30px; height: 30px; border-radius: 50%; background: linear-gradient(135deg,var(--gold),var(--green)); display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-weight: 700; font-size: 13px; color:#14120F; }
     .avatar-name { font-size: 13px; font-weight: 500; }
     .avatar-role { font-size: 10.5px; color: var(--text-faint); text-transform: uppercase; letter-spacing: .6px; }
 
     .content { padding: 28px 30px 60px; flex: 1; }
+
     .tab-panel { display: none; animation: fade-in .25s ease; }
     .tab-panel.active { display: block; }
     @keyframes fade-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
@@ -132,9 +122,8 @@
     .grid-2 { grid-template-columns: repeat(2,1fr); }
     .grid-3 { grid-template-columns: repeat(3,1fr); }
     .grid-4 { grid-template-columns: repeat(4,1fr); }
-    .grid-5 { grid-template-columns: repeat(5,1fr); }
-    @media(max-width:1100px) { .grid-4, .grid-5 { grid-template-columns: repeat(2,1fr); } }
-    @media(max-width:720px) { .grid-2,.grid-3,.grid-4,.grid-5 { grid-template-columns: 1fr; } }
+    @media(max-width:1100px) { .grid-4 { grid-template-columns: repeat(2,1fr); } .grid-3 { grid-template-columns: repeat(2,1fr); } }
+    @media(max-width:720px) { .grid-2,.grid-3,.grid-4 { grid-template-columns: 1fr; } }
 
     .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 20px; box-shadow: var(--shadow-sm); }
     .stat-card { display: flex; flex-direction: column; gap: 8px; }
@@ -147,53 +136,109 @@
       padding: 11px 20px; border-radius: var(--radius-sm); border: 1px solid transparent;
       font-weight: 600; font-size: 13.5px; transition: .15s; white-space: nowrap;
     }
-    .btn-primary { background: linear-gradient(135deg,var(--gold-soft),var(--gold)); color: #0A0A0A; }
-    .btn-primary:hover { filter: brightness(1.08); }
-    .btn-blue { background: var(--blue); color: white; }
-    .btn-blue:hover { background: var(--blue-soft); }
+    .btn-primary { background: linear-gradient(135deg,var(--gold-soft),var(--gold)); color: #1A1611; }
+    .btn-primary:hover { filter: brightness(1.08); transform: translateY(-1px); }
+    .btn-primary:disabled { opacity: .4; cursor: not-allowed; transform: none; }
     .btn-outline { background: transparent; border-color: var(--border); color: var(--text); }
     .btn-outline:hover { border-color: var(--gold); color: var(--gold-soft); }
     .btn-ghost { background: var(--surface-2); color: var(--text-muted); }
     .btn-ghost:hover { color: var(--text); }
-    .btn-danger { background: var(--red-dim); color: var(--red-soft); border-color: var(--red-dim); }
-    .btn-danger:hover { background: rgba(239,68,68,.25); }
+    .btn-danger { background: rgba(185,74,61,.12); color: var(--red-soft); border-color: rgba(185,74,61,.3); }
+    .btn-danger:hover { background: rgba(185,74,61,.22); }
     .btn-sm { padding: 7px 13px; font-size: 12.5px; }
     .btn-block { width: 100%; }
 
     label { display: block; font-size: 12.5px; color: var(--text-muted); margin-bottom: 6px; font-weight: 500; }
     .field { margin-bottom: 16px; }
-    input, select, textarea {
+    input[type=text],input[type=password],input[type=email],input[type=tel],input[type=number],
+    input[type=date],input[type=time],select,textarea {
       width: 100%; background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius-sm);
       padding: 11px 13px; color: var(--text); font-size: 14px; transition: .15s;
     }
-    input:focus, select:focus, textarea:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 3px var(--blue-dim); }
+    input:focus,select:focus,textarea:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 3px var(--gold-dim); }
+    input::placeholder { color: var(--text-faint); }
+    select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23A79E8F' stroke-width='1.5' fill='none'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 13px center; padding-right: 34px; }
     .field-row { display: flex; gap: 12px; }
     .field-row>.field { flex: 1; }
     .checkbox-row { display: flex; align-items: center; gap: 9px; padding: 9px 0; }
-    .checkbox-row input { accent-color: var(--blue); }
+    .checkbox-row input { width: auto; accent-color: var(--gold); }
+    .checkbox-row label { margin: 0; color: var(--text); font-weight: 400; }
+    .help-text { font-size: 11.5px; color: var(--text-faint); margin-top: 5px; }
 
-    .badge { display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; border-radius: 999px; font-size: 11px; font-weight: 600; text-transform: uppercase; }
-    .badge-green { background: rgba(58,92,73,.25); color: #5C8A70; }
+    .chip-row { display: flex; gap: 8px; flex-wrap: wrap; }
+    .chip {
+      padding: 9px 16px; border-radius: 999px; border: 1px solid var(--border); background: var(--surface-2);
+      color: var(--text-muted); font-size: 13px; font-weight: 500; transition: .15s;
+    }
+    .chip:hover { border-color: var(--gold); }
+    .chip.active { background: var(--gold-dim); border-color: var(--gold); color: var(--gold-soft); }
+    .badge { display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; border-radius: 999px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .4px; }
+    .badge-green { background: rgba(58,92,73,.25); color: var(--green-soft); }
     .badge-gold { background: var(--gold-dim); color: var(--gold-soft); }
-    .badge-blue { background: var(--blue-dim); color: var(--blue-soft); }
-    .badge-red { background: var(--red-dim); color: var(--red-soft); }
+    .badge-red { background: rgba(185,74,61,.18); color: var(--red-soft); }
     .badge-muted { background: var(--surface-3); color: var(--text-faint); }
 
-    .login-shell { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
-    .login-box { width: 100%; max-width: 400px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 34px 32px; }
-    .login-logo { text-align: center; font-family: var(--font-display); font-size: 26px; font-weight: 700; color: var(--gold-soft); }
-    .login-tag { text-align: center; color: var(--text-faint); font-size: 12.5px; margin-bottom: 26px; text-transform: uppercase; }
-    .login-error { background: var(--red-dim); border: 1px solid var(--red-soft); color: var(--red-soft); padding: 11px 14px; border-radius: var(--radius-sm); font-size: 13px; margin-bottom: 16px; display: none; }
-    .login-error.show { display: block; }
-    .login-switch { text-align: center; margin-top: 18px; font-size: 13px; color: var(--text-faint); }
-    .login-switch a { color: var(--gold-soft); font-weight: 600; }
+    .calendar { background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; }
+    .cal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+    .cal-head .month-label { font-family: var(--font-display); font-size: 16px; letter-spacing: .4px; text-transform: capitalize; }
+    .cal-nav { display: flex; gap: 6px; }
+    .cal-nav button { width: 32px; height: 32px; border-radius: 50%; background: var(--surface-3); border: none; color: var(--text-muted); display: flex; align-items: center; justify-content: center; }
+    .cal-nav button:hover:not(:disabled) { color: var(--gold-soft); }
+    .cal-nav button:disabled { opacity: .3; cursor: not-allowed; }
+    .cal-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 5px; }
+    .cal-dow { text-align: center; font-size: 11px; color: var(--text-faint); text-transform: uppercase; padding-bottom: 6px; letter-spacing: .5px; }
+    .cal-day {
+      aspect-ratio: 1; display: flex; align-items: center; justify-content: center; border-radius: var(--radius-sm);
+      font-size: 13.5px; color: var(--text-muted); background: transparent; border: 1px solid transparent; transition: .12s;
+    }
+    .cal-day.empty { visibility: hidden; }
+    .cal-day.enabled { cursor: pointer; color: var(--text); }
+    .cal-day.enabled:hover { border-color: var(--gold); }
+    .cal-day.disabled { color: var(--text-faint); opacity: .35; cursor: not-allowed; }
+    .cal-day.today { border-color: var(--green-soft); }
+    .cal-day.selected { background: linear-gradient(135deg,var(--gold-soft),var(--gold)); color: #1A1611; font-weight: 700; }
 
-    .loader { width: 16px; height: 16px; border: 2px solid rgba(255,255,255,.2); border-top-color: var(--gold); border-radius: 50%; animation: spin .6s linear infinite; }
-    @keyframes spin { to { transform: rotate(360deg); } }
+    .slots-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(84px,1fr)); gap: 8px; margin-top: 6px; }
+    .slot-btn { padding: 10px 6px; border-radius: var(--radius-sm); background: var(--surface-2); border: 1px solid var(--border); color: var(--text); font-family: var(--font-mono); font-size: 13px; text-align: center; transition: .12s; }
+    .slot-btn:hover { border-color: var(--gold); }
+    .slot-btn.selected { background: var(--gold-dim); border-color: var(--gold); color: var(--gold-soft); font-weight: 600; }
+    .slot-empty { color: var(--text-faint); font-size: 13px; padding: 20px 0; text-align: center; grid-column: 1/-1; }
 
-    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.7); backdrop-filter: blur(3px); display: flex; align-items: center; justify-content: center; z-index: 100; padding: 20px; opacity: 0; pointer-events: none; transition: .18s; }
+    .table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: var(--radius); }
+    table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+    thead th { text-align: left; padding: 12px 16px; background: var(--surface-2); color: var(--text-faint); font-weight: 600; text-transform: uppercase; font-size: 11px; letter-spacing: .5px; border-bottom: 1px solid var(--border); white-space: nowrap; }
+    tbody td { padding: 13px 16px; border-bottom: 1px solid var(--border); color: var(--text-muted); }
+    tbody tr:last-child td { border-bottom: none; }
+    tbody tr:hover { background: var(--surface-2); }
+    tbody td strong { color: var(--text); font-weight: 500; }
+    .table-empty { padding: 40px 16px; text-align: center; color: var(--text-faint); }
+
+    .appt-card {
+      display: flex; gap: 16px; align-items: center; background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 16px 18px; margin-bottom: 10px;
+    }
+    .appt-date {
+      flex-shrink: 0; width: 58px; height: 58px; border-radius: var(--radius-sm); background: var(--surface-2);
+      display: flex; flex-direction: column; align-items: center; justify-content: center; border: 1px solid var(--border);
+    }
+    .appt-date .d { font-family: var(--font-display); font-size: 19px; font-weight: 700; color: var(--gold-soft); line-height: 1; }
+    .appt-date .m { font-size: 10px; color: var(--text-faint); text-transform: uppercase; letter-spacing: .5px; margin-top: 2px; }
+    .appt-info { flex: 1; min-width: 0; }
+    .appt-info .service { font-weight: 600; font-size: 14.5px; }
+    .appt-info .meta { font-size: 12.5px; color: var(--text-faint); margin-top: 3px; }
+    .appt-actions { display: flex; gap: 8px; flex-shrink: 0; }
+
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(10,9,7,.65); backdrop-filter: blur(3px);
+      display: flex; align-items: center; justify-content: center; z-index: 100; padding: 20px;
+      opacity: 0; pointer-events: none; transition: .18s;
+    }
     .modal-overlay.open { opacity: 1; pointer-events: all; }
-    .modal { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); width: 100%; max-width: 480px; max-height: 88vh; overflow: auto; box-shadow: var(--shadow); transform: translateY(10px); transition: .18s; }
+    .modal {
+      background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg);
+      width: 100%; max-width: 480px; max-height: 88vh; overflow: auto; box-shadow: var(--shadow);
+      transform: translateY(10px); transition: .18s;
+    }
     .modal-overlay.open .modal { transform: translateY(0); }
     .modal-wide { max-width: 680px; }
     .modal-head { display: flex; align-items: center; justify-content: space-between; padding: 20px 22px; border-bottom: 1px solid var(--border); }
@@ -203,52 +248,63 @@
     .modal-foot { display: flex; justify-content: flex-end; gap: 10px; padding: 16px 22px; border-top: 1px solid var(--border); }
 
     #toast-root { position: fixed; bottom: 24px; right: 24px; display: flex; flex-direction: column; gap: 10px; z-index: 200; }
-    .toast { background: var(--surface-2); border: 1px solid var(--border); border-left: 3px solid var(--gold); border-radius: var(--radius-sm); padding: 13px 18px; font-size: 13.5px; box-shadow: var(--shadow); animation: toast-in .2s ease; }
+    .toast {
+      background: var(--surface-2); border: 1px solid var(--border); border-left: 3px solid var(--gold);
+      border-radius: var(--radius-sm); padding: 13px 18px; font-size: 13.5px; box-shadow: var(--shadow);
+      animation: toast-in .2s ease; min-width: 240px;
+    }
     .toast.error { border-left-color: var(--red-soft); }
-    .toast.success { border-left-color: #5C8A70; }
-    @keyframes toast-in { from { opacity: 0; transform: translateX(20px); } }
+    .toast.success { border-left-color: var(--green-soft); }
+    @keyframes toast-in { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
 
-    .appt-card { display: flex; gap: 16px; align-items: center; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 18px; margin-bottom: 10px; }
-    .appt-date { flex-shrink: 0; width: 58px; height: 58px; border-radius: var(--radius-sm); background: var(--surface-2); display: flex; flex-direction: column; align-items: center; justify-content: center; border: 1px solid var(--border); }
-    .appt-date .d { font-family: var(--font-display); font-size: 19px; font-weight: 700; color: var(--gold-soft); line-height: 1; }
-    .appt-date .m { font-size: 10px; color: var(--text-faint); text-transform: uppercase; }
-    .appt-info { flex: 1; }
-    .appt-info .service { font-weight: 600; font-size: 14.5px; }
-    .appt-info .meta { font-size: 12.5px; color: var(--text-faint); }
-
-    .calendar { background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; }
-    .cal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
-    .cal-head .month-label { font-family: var(--font-display); font-size: 16px; }
-    .cal-nav button { width: 32px; height: 32px; border-radius: 50%; background: var(--surface-3); border: none; color: var(--text-muted); }
-    .cal-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 5px; }
-    .cal-dow { text-align: center; font-size: 11px; color: var(--text-faint); text-transform: uppercase; }
-    .cal-day { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; border-radius: var(--radius-sm); font-size: 13.5px; color: var(--text-muted); border: 1px solid transparent; }
-    .cal-day.enabled { cursor: pointer; color: var(--text); }
-    .cal-day.enabled:hover { border-color: var(--gold); }
-    .cal-day.disabled { color: var(--text-faint); opacity: .35; }
-    .cal-day.today { border-color: var(--blue-soft); }
-    .cal-day.selected { background: linear-gradient(135deg,var(--gold-soft),var(--gold)); color: #0A0A0A; font-weight: 700; }
+    .plan-card { border: 1px solid var(--border); background: var(--surface); border-radius: var(--radius-lg); padding: 22px; display: flex; flex-direction: column; gap: 12px; position: relative; }
+    .plan-card.current { border-color: var(--gold); }
+    .plan-name { font-family: var(--font-display); font-size: 18px; }
+    .plan-price { font-family: var(--font-mono); font-size: 26px; color: var(--gold-soft); }
+    .plan-price span { font-size: 12px; color: var(--text-faint); }
+    .plan-desc { font-size: 13px; color: var(--text-muted); flex: 1; }
 
     .pay-method-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-bottom: 16px; }
     .pay-method { border: 1px solid var(--border); background: var(--surface-2); border-radius: var(--radius-sm); padding: 14px 10px; text-align: center; font-size: 12.5px; font-weight: 600; color: var(--text-muted); }
     .pay-method.active { border-color: var(--gold); color: var(--gold-soft); background: var(--gold-dim); }
+    .pix-box { background: var(--surface-2); border: 1px dashed var(--border); border-radius: var(--radius-sm); padding: 18px; text-align: center; }
+    .pix-code { font-family: var(--font-mono); font-size: 11px; color: var(--text-faint); word-break: break-all; margin-top: 10px; padding: 10px; background: var(--surface); border-radius: var(--radius-sm); }
+
+    .login-shell { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; position: relative; z-index: 1; }
+    .login-box { width: 100%; max-width: 400px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 34px 32px; box-shadow: var(--shadow); }
+    .login-logo { text-align: center; margin-bottom: 6px; font-family: var(--font-display); font-size: 26px; font-weight: 700; color: var(--gold-soft); }
+    .login-tag { text-align: center; color: var(--text-faint); font-size: 12.5px; margin-bottom: 26px; text-transform: uppercase; letter-spacing: 1px; }
+    .login-error { background: rgba(185,74,61,.12); border: 1px solid rgba(185,74,61,.3); color: var(--red-soft); padding: 11px 14px; border-radius: var(--radius-sm); font-size: 13px; margin-bottom: 16px; display: none; }
+    .login-error.show { display: block; }
+    .login-switch { text-align: center; margin-top: 18px; font-size: 13px; color: var(--text-faint); }
+    .login-switch a { color: var(--gold-soft); font-weight: 600; }
+
+    .loader { width: 16px; height: 16px; border: 2px solid rgba(0,0,0,.2); border-top-color: #1A1611; border-radius: 50%; animation: spin .6s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .empty-state { text-align: center; padding: 50px 20px; color: var(--text-faint); }
+    .empty-state svg { width: 40px; height: 40px; margin-bottom: 12px; opacity: .5; }
+    .empty-state p { font-size: 13.5px; }
+
+    .hidden { display: none !important; }
 
     @media(max-width:880px) {
-      .sidebar { position: fixed; left: -236px; z-index: 60; transition: .2s; }
+      .sidebar { position: fixed; left: -236px; z-index: 60; transition: .2s; box-shadow: var(--shadow); }
       .sidebar.open { left: 0; }
       .content { padding: 20px 16px 60px; }
       .topbar { padding: 14px 16px; }
-      .menu-toggle { display: flex; }
+      .grid-4,.grid-3,.grid-2 { grid-template-columns: 1fr; }
+      .pay-method-grid { grid-template-columns: 1fr 1fr 1fr; }
     }
     .menu-toggle { display: none; width: 38px; height: 38px; border-radius: var(--radius-sm); background: var(--surface-2); border: 1px solid var(--border); color: var(--text); align-items: center; justify-content: center; }
+    @media(max-width:880px) { .menu-toggle { display: flex; } }
   </style>
 </head>
 <body>
   <div id="app-root"></div>
   <div id="toast-root"></div>
-
-    <script>
-    // ========== SUPABASE ==========
+  <script>
+    // ======================== SUPABASE ========================
     const SUPABASE_URL = "https://cmujcmfgsmfnqupoceyg.supabase.co";
     const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNtdWpjbWZnc21mbnF1cG9jZXlnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODQxNjEzNTEsImV4cCI6MjA5OTczNzM1MX0.p6Qb2XLq0gwWXembZZHWOdWzAW8lbp8FVShFQkTwVk4";
 
@@ -275,6 +331,7 @@
     const db = {
       select: (table, query = "?select=*") => sbRequest(table, { method: "GET", query }),
       insert: (table, body) => sbRequest(table, { method: "POST", body }),
+      insertMany: (table, bodyArray) => sbRequest(table, { method: "POST", body: bodyArray }),
       update: (table, query, body) => sbRequest(table, { method: "PATCH", query, body }),
       remove: (table, query) => sbRequest(table, { method: "DELETE", query, prefer: "return=minimal" }),
     };
@@ -284,41 +341,100 @@
       const buf = await crypto.subtle.digest("SHA-256", enc);
       return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, "0")).join("");
     }
+
     function pgEsc(v) { return encodeURIComponent(String(v)); }
 
-    // ========== COMMON ==========
+    // ======================== COMMON ========================
     const SESSION_KEY = "barber_session";
     function saveSession(user) { localStorage.setItem(SESSION_KEY, JSON.stringify(user)); }
     function getSession() { const s = localStorage.getItem(SESSION_KEY); return s ? JSON.parse(s) : null; }
     function clearSession() { localStorage.removeItem(SESSION_KEY); }
+
     function toast(message, type = "default") {
       const root = document.getElementById("toast-root");
       const el = document.createElement("div");
       el.className = `toast ${type}`;
       el.textContent = message;
       root.appendChild(el);
-      setTimeout(() => { el.style.opacity = "0"; el.style.transform = "translateX(20px)"; el.style.transition = ".2s"; setTimeout(() => el.remove(), 200); }, 3600);
+      setTimeout(() => {
+        el.style.opacity = "0";
+        el.style.transform = "translateX(20px)";
+        el.style.transition = ".2s";
+        setTimeout(() => el.remove(), 200);
+      }, 3600);
     }
+
     function openModal(id) { document.getElementById(id)?.classList.add("open"); }
     function closeModal(id) { document.getElementById(id)?.classList.remove("open"); }
     document.addEventListener("click", e => { if (e.target.classList?.contains("modal-overlay")) e.target.classList.remove("open"); });
+
     function escapeHtml(str) { const div = document.createElement("div"); div.textContent = str ?? ""; return div.innerHTML; }
     function money(v) { const n = Number(v || 0); return n.toLocaleString("pt-BR", { style: "currency", currency: "BRL" }); }
     function pad2(n) { return String(n).padStart(2, "0"); }
     function toISODate(d) { return `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`; }
     function initials(name) { if (!name) return "?"; const parts = name.trim().split(/\s+/); return ((parts[0]?.[0]||"")+(parts[1]?.[0]||"")).toUpperCase(); }
-    const MONTH_NAMES = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
     const WEEKDAY_KEYS = ["dom","seg","ter","qua","qui","sex","sab"];
+    const MONTH_NAMES = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
 
     async function notifyUser(username, system, message) {
       if (!username) return;
-      try { await db.insert("NOTIFICATIONS", { SYSTEM: system, USER: username, MESSAGE: message, READ: false }); } catch (e) {}
+      try { await db.insert("NOTIFICATIONS", { SYSTEM: system, USER: username, MESSAGE: message, READ: false }); } catch (e) { console.error(e); }
     }
 
     function setupSidebarToggle() {
       const btn = document.getElementById("menu-toggle");
       const sidebar = document.getElementById("sidebar");
       btn?.addEventListener("click", () => sidebar.classList.toggle("open"));
+    }
+
+    let notificationInterval = null;
+    function clearNotificationInterval() {
+      if (notificationInterval) { clearInterval(notificationInterval); notificationInterval = null; }
+    }
+
+    async function initNotifications(currentUser) {
+      clearNotificationInterval();
+      const bellBtn = document.getElementById("bell-btn");
+      const panel = document.getElementById("notif-panel");
+      const dot = document.getElementById("bell-dot");
+      if (!bellBtn) return;
+
+      async function load() {
+        try {
+          const rows = await db.select("NOTIFICATIONS", `?select=*&USER=eq.${pgEsc(currentUser.USER)}&order=CREATED_AT.desc&limit=20`);
+          panel.innerHTML = "";
+          const head = document.createElement("div");
+          head.className = "notif-header";
+          head.textContent = "Notificações";
+          panel.appendChild(head);
+          const unread = (rows || []).filter(r => !r.READ);
+          dot.classList.toggle("show", unread.length > 0);
+          if (!rows || rows.length === 0) {
+            const empty = document.createElement("div");
+            empty.className = "notif-empty";
+            empty.textContent = "Nenhuma notificação por aqui.";
+            panel.appendChild(empty);
+            return;
+          }
+          rows.forEach(n => {
+            const item = document.createElement("div");
+            item.className = "notif-item" + (n.READ ? "" : " unread");
+            const dt = n.CREATED_AT ? new Date(n.CREATED_AT) : null;
+            item.innerHTML = `${escapeHtml(n.MESSAGE || "")}<span class="notif-time">${dt ? dt.toLocaleString("pt-BR") : ""}</span>`;
+            item.addEventListener("click", async () => {
+              if (!n.READ) {
+                try { await db.update("NOTIFICATIONS", `?ID=eq.${n.ID}`, { READ: true }); n.READ = true; item.classList.remove("unread"); load(); } catch (e) {}
+              }
+            });
+            panel.appendChild(item);
+          });
+        } catch (e) { console.error(e); }
+      }
+
+      bellBtn.addEventListener("click", e => { e.stopPropagation(); panel.classList.toggle("open"); });
+      document.addEventListener("click", e => { if (!panel.contains(e.target) && e.target !== bellBtn) panel.classList.remove("open"); });
+      await load();
+      notificationInterval = setInterval(load, 30000);
     }
 
     function initTabs(onTabChange) {
@@ -335,101 +451,94 @@
       });
     }
 
-    let notificationInterval = null;
-    async function initNotifications(currentUser) {
-      clearInterval(notificationInterval);
-      const bellBtn = document.getElementById("bell-btn");
-      const panel = document.getElementById("notif-panel");
-      const dot = document.getElementById("bell-dot");
-      if (!bellBtn) return;
-      async function load() {
-        try {
-          const rows = await db.select("NOTIFICATIONS", `?select=*&USER=eq.${pgEsc(currentUser.USER)}&order=CREATED_AT.desc&limit=20`);
-          panel.innerHTML = "";
-          const head = document.createElement("div"); head.className = "notif-header"; head.textContent = "Notificações"; panel.appendChild(head);
-          const unread = (rows||[]).filter(r => !r.READ);
-          dot.classList.toggle("show", unread.length > 0);
-          if (!rows || rows.length === 0) { panel.innerHTML += '<div class="notif-empty">Nenhuma notificação.</div>'; return; }
-          rows.forEach(n => {
-            const item = document.createElement("div");
-            item.className = "notif-item" + (n.READ ? "" : " unread");
-            const dt = n.CREATED_AT ? new Date(n.CREATED_AT) : null;
-            item.innerHTML = `${escapeHtml(n.MESSAGE||"")}<span class="notif-time">${dt?dt.toLocaleString("pt-BR"):""}</span>`;
-            item.addEventListener("click", async () => { if (!n.READ) { await db.update("NOTIFICATIONS", `?ID=eq.${n.ID}`, { READ:true }); n.READ=true; item.classList.remove("unread"); load(); } });
-            panel.appendChild(item);
-          });
-        } catch(e) { console.error(e); }
-      }
-      bellBtn.addEventListener("click", e => { e.stopPropagation(); panel.classList.toggle("open"); });
-      document.addEventListener("click", e => { if (!panel.contains(e.target) && e.target !== bellBtn) panel.classList.remove("open"); });
-      await load();
-      notificationInterval = setInterval(load, 30000);
+    function logout() {
+      clearSession();
+      clearNotificationInterval();
+      showLoginView();
     }
 
-    function logout() { clearSession(); clearInterval(notificationInterval); showLoginView(); }
-
-    // ========== ROTEAMENTO ==========
+    // ======================== ROUTING ========================
     function showPanel(level) {
       const u = getSession();
       if (!u) { showLoginView(); return; }
-      if (level === "admin") showSuperAdminPanel(u);
-      else if (level === "000") showDonoPanel(u);
+      if (level === "0") showClientePanel(u);
       else if (level === "00") showFuncionarioPanel(u);
-      else if (level === "0") showClientePanel(u);
+      else if (level === "000") showDonoPanel(u);
       else showLoginView();
     }
 
-    // ========== LOGIN VIEW ==========
+    // ======================== LOGIN VIEW ========================
     function showLoginView() {
       document.getElementById("app-root").innerHTML = `
         <div class="login-shell">
           <div class="login-box">
             <div class="login-logo">✂ BarberOS</div>
-            <div class="login-tag">Gestão Inteligente</div>
+            <div class="login-tag">Gestão de barbearia</div>
             <div class="stripe-bar" style="margin-bottom:22px;"></div>
             <div id="view-login">
               <div class="login-error" id="login-error"></div>
               <form id="form-login">
-                <div class="field"><label>Usuário</label><input type="text" id="login-user" required></div>
-                <div class="field"><label>Senha</label><input type="password" id="login-pass" required></div>
-                <button type="submit" class="btn btn-primary btn-block">Entrar</button>
+                <div class="field"><label>Usuário</label><input type="text" id="login-user" placeholder="seu.usuario" required autocomplete="username"></div>
+                <div class="field"><label>Senha</label><input type="password" id="login-pass" placeholder="••••••••" required autocomplete="current-password"></div>
+                <button type="submit" class="btn btn-primary btn-block" id="btn-login"><span id="login-btn-text">Entrar</span></button>
               </form>
-              <div class="login-switch">Novo cliente? <a href="#" id="go-signup">Cadastre-se</a></div>
+              <div class="login-switch">Ainda não tem conta? <a href="#" id="go-signup">Cadastre-se como cliente</a></div>
             </div>
             <div id="view-signup" class="hidden">
               <div class="login-error" id="signup-error"></div>
               <form id="form-signup">
-                <div class="field"><label>Código da barbearia</label><input type="text" id="su-system" required></div>
-                <div class="field"><label>Nome</label><input type="text" id="su-name" required></div>
+                <div class="field"><label>Código da barbearia</label><input type="text" id="su-system" placeholder="ex: barbearia-central" required><p class="help-text">Peça esse código ao dono da barbearia onde você quer agendar.</p></div>
+                <div class="field-row"><div class="field"><label>Nome completo</label><input type="text" id="su-name" required></div></div>
                 <div class="field-row"><div class="field"><label>Usuário</label><input type="text" id="su-user" required></div><div class="field"><label>Senha</label><input type="password" id="su-pass" required></div></div>
-                <div class="field-row"><div class="field"><label>E-mail</label><input type="email" id="su-email" required></div><div class="field"><label>Telefone</label><input type="tel" id="su-number" required></div></div>
-                <button type="submit" class="btn btn-primary btn-block">Criar conta</button>
+                <div class="field-row"><div class="field"><label>E-mail</label><input type="email" id="su-email" required></div><div class="field"><label>Telefone</label><input type="tel" id="su-number" placeholder="(00) 00000-0000" required></div></div>
+                <button type="submit" class="btn btn-primary btn-block" id="btn-signup"><span id="signup-btn-text">Criar conta</span></button>
               </form>
-              <div class="login-switch"><a href="#" id="go-login">Voltar ao login</a></div>
+              <div class="login-switch">Já tem conta? <a href="#" id="go-login">Entrar</a></div>
             </div>
           </div>
         </div>
       `;
-      document.getElementById("go-signup").addEventListener("click", e => { e.preventDefault(); document.getElementById("view-login").classList.add("hidden"); document.getElementById("view-signup").classList.remove("hidden"); });
-      document.getElementById("go-login").addEventListener("click", e => { e.preventDefault(); document.getElementById("view-signup").classList.add("hidden"); document.getElementById("view-login").classList.remove("hidden"); });
-      document.getElementById("form-login").addEventListener("submit", async (e) => {
+      setupLoginEvents();
+    }
+
+    function setupLoginEvents() {
+      document.getElementById("go-signup").addEventListener("click", e => {
+        e.preventDefault();
+        document.getElementById("view-login").classList.add("hidden");
+        document.getElementById("view-signup").classList.remove("hidden");
+      });
+      document.getElementById("go-login").addEventListener("click", e => {
+        e.preventDefault();
+        document.getElementById("view-signup").classList.add("hidden");
+        document.getElementById("view-login").classList.remove("hidden");
+      });
+      document.getElementById("form-login").addEventListener("submit", async e => {
         e.preventDefault();
         const errBox = document.getElementById("login-error");
         errBox.classList.remove("show");
         const userVal = document.getElementById("login-user").value.trim();
         const pass = document.getElementById("login-pass").value;
+        const btn = document.getElementById("btn-login");
+        btn.disabled = true;
+        document.getElementById("login-btn-text").innerHTML = '<span class="loader"></span>';
         try {
           const hash = await hashPassword(pass);
           const rows = await db.select("BD_USERS", `?select=*&USER=eq.${pgEsc(userVal)}&PASSWORD=eq.${pgEsc(hash)}&limit=1`);
           if (!rows || rows.length === 0) throw new Error("Usuário ou senha incorretos.");
           const found = rows[0];
-          if (found.ACTIVE === false) throw new Error("Usuário desativado.");
+          if (found.ACTIVE === false) throw new Error("Este usuário está desativado.");
           saveSession({ USER: found.USER, NAME: found.NAME, EMAIL: found.EMAIL, NUMBER: found.NUMBER, LEVEL: found.LEVEL, SYSTEM: found.SYSTEM, PERMISSIONS: found.PERMISSIONS || {} });
           toast(`Bem-vindo, ${found.NAME || found.USER}!`, "success");
           setTimeout(() => showPanel(found.LEVEL), 400);
-        } catch (err) { errBox.textContent = err.message; errBox.classList.add("show"); }
+        } catch (err) {
+          errBox.textContent = err.message;
+          errBox.classList.add("show");
+        } finally {
+          btn.disabled = false;
+          document.getElementById("login-btn-text").textContent = "Entrar";
+        }
       });
-      document.getElementById("form-signup").addEventListener("submit", async (e) => {
+      document.getElementById("form-signup").addEventListener("submit", async e => {
         e.preventDefault();
         const errBox = document.getElementById("signup-error");
         errBox.classList.remove("show");
@@ -439,534 +548,31 @@
         const pass = document.getElementById("su-pass").value;
         const email = document.getElementById("su-email").value.trim();
         const number = document.getElementById("su-number").value.trim();
+        const btn = document.getElementById("btn-signup");
+        btn.disabled = true;
+        document.getElementById("signup-btn-text").innerHTML = '<span class="loader"></span>';
         try {
           const owners = await db.select("BD_USERS", `?select=SYSTEM&SYSTEM=eq.${pgEsc(system)}&LEVEL=eq.000&limit=1`);
           if (!owners || owners.length === 0) throw new Error("Código de barbearia não encontrado.");
           const existing = await db.select("BD_USERS", `?select=USER&USER=eq.${pgEsc(userVal)}&limit=1`);
-          if (existing && existing.length > 0) throw new Error("Usuário já existe.");
+          if (existing && existing.length > 0) throw new Error("Esse nome de usuário já está em uso.");
           const hash = await hashPassword(pass);
           await db.insert("BD_USERS", { USER: userVal, PASSWORD: hash, NAME: name, NUMBER: number, EMAIL: email, SYSTEM: system, LEVEL: "0", ACTIVE: true });
           await db.insert("CLIENT_USER", { USER: userVal, NAME: name, NUMBER: number, EMAIL: email, SYSTEM: system, STATE: "sem_plano", TYPE_PAY: null, VALUE: 0 });
           toast("Conta criada! Faça login.", "success");
           document.getElementById("form-signup").reset();
           document.getElementById("go-login").click();
-        } catch (err) { errBox.textContent = err.message; errBox.classList.add("show"); }
+        } catch (err) {
+          errBox.textContent = err.message;
+          errBox.classList.add("show");
+        } finally {
+          btn.disabled = false;
+          document.getElementById("signup-btn-text").textContent = "Criar conta";
+        }
       });
     }
-  </script>
 
-    <script>
-    // ========== PAINEL SUPER ADMIN ==========
-    function showSuperAdminPanel(admin) {
-      document.getElementById("app-root").innerHTML = `
-        <div class="app-shell">
-          <aside class="sidebar" id="sidebar">
-            <div class="brand"><div class="brand-mark">✂ BarberOS</div><div class="brand-sub">Super Admin</div></div>
-            <a class="nav-item stripe-underline active" data-tab-btn="dashboard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 3v18h18M7 15l4-6 3 3 5-8"/></svg> Dashboard</a>
-            <a class="nav-item stripe-underline" data-tab-btn="donos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg> Donos</a>
-            <a class="nav-item stripe-underline" data-tab-btn="planos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2l3 6 6 1-4.5 4.5L18 20l-6-3-6 3 1.5-6.5L3 9l6-1z"/></svg> Planos do Sistema</a>
-            <div class="nav-spacer"></div>
-            <a class="nav-item logout" id="btn-logout"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg> Sair</a>
-          </aside>
-          <div class="main">
-            <header class="topbar">
-              <div style="display:flex;align-items:center;gap:12px;"><button class="menu-toggle" id="menu-toggle">☰</button><div class="topbar-title">Dashboard<span>Visão geral do sistema</span></div></div>
-              <div class="avatar-chip"><div class="avatar-circle">A</div><div><div class="avatar-name">Admin</div><div class="avatar-role">Super Admin</div></div></div>
-            </header>
-            <main class="content">
-              <section class="tab-panel active" data-tab-panel="dashboard">
-                <div class="grid grid-4" id="admin-kpis"></div>
-                <div class="grid grid-2" style="margin-top:20px;">
-                  <div class="card"><h3>Receita total por mês</h3><canvas id="chart-admin-revenue"></canvas></div>
-                  <div class="card"><h3>Barbearias ativas</h3><canvas id="chart-admin-barbers"></canvas></div>
-                </div>
-              </section>
-              <section class="tab-panel" data-tab-panel="donos">
-                <div class="section-head"><h2>Donos cadastrados</h2><button class="btn btn-primary" id="btn-new-owner">+ Novo dono</button></div>
-                <div class="table-wrap"><table><thead><tr><th>Nome</th><th>Usuário</th><th>Barbearia</th><th>Plano</th><th>Status</th><th></th></tr></thead><tbody id="owners-tbody"></tbody></table></div>
-              </section>
-              <section class="tab-panel" data-tab-panel="planos">
-                <div class="section-head"><h2>Planos do sistema</h2><button class="btn btn-primary" id="btn-new-plan">+ Novo plano</button></div>
-                <div class="table-wrap"><table><thead><tr><th>Nome</th><th>Preço</th><th>Recursos</th><th>Ativo</th><th></th></tr></thead><tbody id="plans-tbody"></tbody></table></div>
-              </section>
-            </main>
-          </div>
-        </div>
-        <!-- Modal dono -->
-        <div class="modal-overlay" id="modal-owner">
-          <div class="modal modal-wide">
-            <div class="modal-head"><h3 id="owner-modal-title">Novo dono</h3><button class="modal-close" onclick="closeModal('modal-owner')">✕</button></div>
-            <div class="modal-body">
-              <input type="hidden" id="owner-id">
-              <div class="field-row"><div class="field"><label>Nome</label><input type="text" id="owner-name"></div><div class="field"><label>Usuário</label><input type="text" id="owner-user"></div></div>
-              <div class="field-row"><div class="field"><label>Senha</label><input type="password" id="owner-pass"></div><div class="field"><label>Email</label><input type="email" id="owner-email"></div></div>
-              <div class="field"><label>Código da barbearia</label><input type="text" id="owner-system"></div>
-              <div class="field"><label>Plano</label><select id="owner-plan"></select></div>
-              <div class="checkbox-row"><input type="checkbox" id="owner-active" checked><label>Ativo</label></div>
-            </div>
-            <div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal('modal-owner')">Cancelar</button><button class="btn btn-primary" id="btn-save-owner">Salvar</button></div>
-          </div>
-        </div>
-        <!-- Modal plano -->
-        <div class="modal-overlay" id="modal-plan">
-          <div class="modal">
-            <div class="modal-head"><h3 id="plan-modal-title">Novo plano</h3><button class="modal-close" onclick="closeModal('modal-plan')">✕</button></div>
-            <div class="modal-body">
-              <input type="hidden" id="plan-id">
-              <div class="field"><label>Nome</label><input type="text" id="plan-name"></div>
-              <div class="field"><label>Preço (R$)</label><input type="number" step="0.01" id="plan-price"></div>
-              <div class="field"><label>Recursos (descrição)</label><textarea id="plan-features" rows="3"></textarea></div>
-              <div class="checkbox-row"><input type="checkbox" id="plan-active" checked><label>Ativo</label></div>
-            </div>
-            <div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal('modal-plan')">Cancelar</button><button class="btn btn-primary" id="btn-save-plan">Salvar</button></div>
-          </div>
-        </div>
-      `;
-      // Inicializa eventos e carrega dados
-      initSuperAdmin(admin);
-    }
-
-    function initSuperAdmin(admin) {
-      setupSidebarToggle();
-      document.getElementById("btn-logout").addEventListener("click", logout);
-
-      const titles = {
-        dashboard: ["Dashboard", "Visão geral do sistema"],
-        donos: ["Donos", "Gerenciar proprietários de barbearias"],
-        planos: ["Planos do Sistema", "Planos de assinatura disponíveis"]
-      };
-      initTabs(tab => {
-        const t = titles[tab];
-        if (t) document.querySelector(".topbar-title").innerHTML = `${t[0]}<span>${t[1]}</span>`;
-        if (tab === "dashboard") loadAdminDashboard();
-        if (tab === "donos") loadOwners();
-        if (tab === "planos") loadPlans();
-      });
-
-      loadAdminDashboard();
-      document.getElementById("btn-new-owner").addEventListener("click", () => openOwnerModal());
-      document.getElementById("btn-save-owner").addEventListener("click", saveOwner);
-      document.getElementById("btn-new-plan").addEventListener("click", () => openPlanModal());
-      document.getElementById("btn-save-plan").addEventListener("click", savePlan);
-
-      async function loadAdminDashboard() {
-        // KPIs e gráficos gerais (implementação resumida)
-        const owners = await db.select("BD_USERS", "?select=*&LEVEL=eq.000");
-        document.getElementById("admin-kpis").innerHTML = `
-          <div class="card stat-card"><div class="stat-label">Total de barbearias</div><div class="stat-value">${owners.length}</div></div>
-        `;
-      }
-
-      async function loadOwners() {
-        const rows = await db.select("BD_USERS", "?select=*&LEVEL=eq.000&order=NAME.asc");
-        const tbody = document.getElementById("owners-tbody");
-        if (!rows || rows.length === 0) { tbody.innerHTML = '<tr><td colspan="6" class="table-empty">Nenhum dono cadastrado.</td></tr>'; return; }
-        tbody.innerHTML = rows.map(o => `<tr>
-          <td><strong>${escapeHtml(o.NAME)}</strong></td>
-          <td>${escapeHtml(o.USER)}</td>
-          <td>${escapeHtml(o.SYSTEM)}</td>
-          <td>---</td>
-          <td>${o.ACTIVE ? '<span class="badge badge-green">Ativo</span>' : '<span class="badge badge-red">Inativo</span>'}</td>
-          <td><button class="btn btn-ghost btn-sm" data-edit-owner="${o.USER}">Editar</button></td>
-        </tr>`).join("");
-        tbody.querySelectorAll("[data-edit-owner]").forEach(b => b.addEventListener("click", () => {
-          const owner = rows.find(r => r.USER === b.dataset.editOwner);
-          openOwnerModal(owner);
-        }));
-      }
-
-      function openOwnerModal(owner) {
-        document.getElementById("owner-modal-title").textContent = owner ? "Editar dono" : "Novo dono";
-        document.getElementById("owner-id").value = owner?.USER || "";
-        document.getElementById("owner-name").value = owner?.NAME || "";
-        document.getElementById("owner-user").value = owner?.USER || "";
-        document.getElementById("owner-email").value = owner?.EMAIL || "";
-        document.getElementById("owner-system").value = owner?.SYSTEM || "";
-        document.getElementById("owner-active").checked = owner ? owner.ACTIVE !== false : true;
-        openModal("modal-owner");
-      }
-
-      async function saveOwner() {
-        const id = document.getElementById("owner-id").value;
-        const name = document.getElementById("owner-name").value.trim();
-        const userVal = document.getElementById("owner-user").value.trim();
-        const pass = document.getElementById("owner-pass").value;
-        const email = document.getElementById("owner-email").value.trim();
-        const system = document.getElementById("owner-system").value.trim();
-        const active = document.getElementById("owner-active").checked;
-        if (!name || !userVal) { toast("Preencha nome e usuário.", "error"); return; }
-        try {
-          if (!id) {
-            if (!pass) { toast("Defina uma senha.", "error"); return; }
-            const hash = await hashPassword(pass);
-            await db.insert("BD_USERS", { USER: userVal, PASSWORD: hash, NAME: name, EMAIL: email, SYSTEM: system, LEVEL: "000", ACTIVE: active });
-          } else {
-            const payload = { NAME: name, USER: userVal, EMAIL: email, SYSTEM: system, ACTIVE: active };
-            if (pass) payload.PASSWORD = await hashPassword(pass);
-            await db.update("BD_USERS", `?USER=eq.${pgEsc(id)}`, payload);
-          }
-          toast("Dono salvo!", "success");
-          closeModal("modal-owner");
-          loadOwners();
-        } catch (e) { toast("Erro ao salvar dono.", "error"); }
-      }
-
-      async function loadPlans() {
-        const rows = await db.select("OWNER_PLANS", "?select=*&order=PRICE.asc");
-        const tbody = document.getElementById("plans-tbody");
-        if (!rows || rows.length === 0) { tbody.innerHTML = '<tr><td colspan="5" class="table-empty">Nenhum plano cadastrado.</td></tr>'; return; }
-        tbody.innerHTML = rows.map(p => `<tr>
-          <td><strong>${escapeHtml(p.NAME)}</strong></td>
-          <td>${money(p.PRICE)}</td>
-          <td>${escapeHtml(p.FEATURES||"")}</td>
-          <td>${p.ACTIVE ? '<span class="badge badge-green">Sim</span>' : '<span class="badge badge-muted">Não</span>'}</td>
-          <td><button class="btn btn-ghost btn-sm" data-edit-plan="${p.ID}">Editar</button></td>
-        </tr>`).join("");
-        tbody.querySelectorAll("[data-edit-plan]").forEach(b => b.addEventListener("click", () => {
-          const plan = rows.find(r => r.ID == b.dataset.editPlan);
-          openPlanModal(plan);
-        }));
-      }
-
-      function openPlanModal(plan) {
-        document.getElementById("plan-modal-title").textContent = plan ? "Editar plano" : "Novo plano";
-        document.getElementById("plan-id").value = plan?.ID || "";
-        document.getElementById("plan-name").value = plan?.NAME || "";
-        document.getElementById("plan-price").value = plan?.PRICE || "";
-        document.getElementById("plan-features").value = plan?.FEATURES || "";
-        document.getElementById("plan-active").checked = plan ? !!plan.ACTIVE : true;
-        openModal("modal-plan");
-      }
-
-      async function savePlan() {
-        const id = document.getElementById("plan-id").value;
-        const payload = {
-          NAME: document.getElementById("plan-name").value.trim(),
-          PRICE: Number(document.getElementById("plan-price").value || 0),
-          FEATURES: document.getElementById("plan-features").value.trim(),
-          ACTIVE: document.getElementById("plan-active").checked
-        };
-        try {
-          if (id) await db.update("OWNER_PLANS", `?ID=eq.${id}`, payload);
-          else await db.insert("OWNER_PLANS", payload);
-          toast("Plano salvo!", "success");
-          closeModal("modal-plan");
-          loadPlans();
-        } catch (e) { toast("Erro ao salvar plano.", "error"); }
-      }
-    }
-  </script>
-
-    <script>
-    // ========== PAINEL DONO (ATUALIZADO) ==========
-    function showDonoPanel(user) {
-      document.getElementById("app-root").innerHTML = `
-        <div class="app-shell">
-          <aside class="sidebar" id="sidebar">
-            <div class="brand"><div class="brand-mark">✂ <span id="sys-name">BarberOS</span></div><div class="brand-sub">Painel do dono</div></div>
-            <a class="nav-item stripe-underline active" data-tab-btn="dashboard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 3v18h18M7 15l4-6 3 3 5-8"/></svg> Dashboard</a>
-            <a class="nav-item stripe-underline" data-tab-btn="agenda"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg> Agenda geral</a>
-            <a class="nav-item stripe-underline" data-tab-btn="funcionarios"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="8" r="3.2"/><path d="M2.5 20c0-3.5 3-5.5 6.5-5.5s6.5 2 6.5 5.5M16 8.5a3 3 0 100-6M19 14.5c2 .6 3 2 3 5.5"/></svg> Funcionários</a>
-            <a class="nav-item stripe-underline" data-tab-btn="servicos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6M9 6l9 9-3 3-9-9M3 21l4-1 10-10-3-3L4 17z"/></svg> Serviços</a>
-            <a class="nav-item stripe-underline" data-tab-btn="bloqueios"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M5 5l14 14"/></svg> Bloqueios</a>
-            <a class="nav-item stripe-underline" data-tab-btn="clientes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg> Clientes</a>
-            <a class="nav-item stripe-underline" data-tab-btn="produtos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4M4 7l8 4m-8-4v10l8 4m0-10v10"/></svg> Produtos</a>
-            <a class="nav-item stripe-underline" data-tab-btn="planos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2l3 6 6 1-4.5 4.5L18 20l-6-3-6 3 1.5-6.5L3 9l6-1z"/></svg> Planos</a>
-            <a class="nav-item stripe-underline" data-tab-btn="comissoes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2v20M2 12h20"/></svg> Comissões</a>
-            <a class="nav-item stripe-underline" data-tab-btn="meu-plano"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2l3 6 6 1-4.5 4.5L18 20l-6-3-6 3 1.5-6.5L3 9l6-1z"/></svg> Meu Plano</a>
-            <a class="nav-item stripe-underline" data-tab-btn="config"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82"/></svg> Configurações</a>
-            <a class="nav-item stripe-underline" data-tab-btn="exportar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 19h16"/></svg> Exportar</a>
-            <div class="nav-spacer"></div>
-            <a class="nav-item logout" id="btn-logout"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg> Sair</a>
-          </aside>
-          <div class="main">
-            <header class="topbar">
-              <div style="display:flex;align-items:center;gap:12px;"><button class="menu-toggle" id="menu-toggle">☰</button><div class="topbar-title" id="page-title">Dashboard<span id="page-sub">Visão geral do negócio</span></div></div>
-              <div class="topbar-right">
-                <div class="bell-wrap"><button class="bell-btn" id="bell-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg><span class="bell-dot" id="bell-dot"></span></button><div class="notif-panel" id="notif-panel"></div></div>
-                <div class="avatar-chip"><div class="avatar-circle" id="avatar-initials">--</div><div><div class="avatar-name" id="avatar-name">Carregando...</div><div class="avatar-role">Dono</div></div></div>
-              </div>
-            </header>
-            <main class="content">
-              <!-- Os painéis serão mantidos como antes, mas adicionamos os novos abaixo -->
-              <section class="tab-panel active" data-tab-panel="dashboard">
-                <div class="grid grid-4" style="margin-bottom:20px;">
-                  <div class="card stat-card"><div class="stat-label">Faturamento (mês)</div><div class="stat-value" id="kpi-revenue">R$ 0</div><div class="stat-sub" id="kpi-revenue-sub">—</div></div>
-                  <div class="card stat-card"><div class="stat-label">Agendamentos hoje</div><div class="stat-value" id="kpi-today">0</div><div class="stat-sub">Concluídos + agendados</div></div>
-                  <div class="card stat-card"><div class="stat-label">Clientes ativos</div><div class="stat-value" id="kpi-clients">0</div><div class="stat-sub" id="kpi-clients-sub">—</div></div>
-                  <div class="card stat-card"><div class="stat-label">Ticket médio</div><div class="stat-value" id="kpi-ticket">R$ 0</div><div class="stat-sub">Por atendimento concluído</div></div>
-                </div>
-                <div class="grid grid-2">
-                  <div class="card"><h3>Faturamento por serviço</h3><canvas id="chart-service" height="220"></canvas></div>
-                  <div class="card"><h3>Agendamentos por funcionário</h3><canvas id="chart-employee" height="220"></canvas></div>
-                </div>
-              </section>
-              <!-- Os outros painéis (agenda, funcionários, etc.) são exatamente os mesmos do código anterior, mas vou inserir os novos ao final -->
-              <section class="tab-panel" data-tab-panel="comissoes">
-                <div class="section-head"><div><h2>Comissões</h2><p>Configurar percentuais e valores fixos por funcionário</p></div><button class="btn btn-primary" id="btn-new-commission">+ Nova regra</button></div>
-                <div class="table-wrap"><table>
-                  <thead><tr><th>Funcionário</th><th>Tipo</th><th>Valor</th><th>Período Pag.</th><th></th></tr></thead>
-                  <tbody id="commissions-tbody"></tbody>
-                </table></div>
-              </section>
-              <section class="tab-panel" data-tab-panel="meu-plano">
-                <div class="section-head"><div><h2>Meu Plano</h2><p>Gerencie sua assinatura do BarberOS</p></div></div>
-                <div class="grid grid-3" id="owner-plans-grid"></div>
-                <div class="card" style="margin-top:20px;" id="current-subscription"></div>
-              </section>
-              <!-- As demais abas permanecem iguais ao código anterior (agenda, funcionários, etc.). Por brevidade, vou apenas referenciá-las com comentários, pois você já possui o código completo. -->
-              <!-- Abas: agenda, funcionarios, servicos, bloqueios, clientes, produtos, planos (planos da barbearia), config, exportar -->
-            </main>
-          </div>
-        </div>
-        <!-- Modals antigos (funcionário, serviço, cliente, produto, plano da barbearia) permanecem -->
-        <!-- Modal de comissão -->
-        <div class="modal-overlay" id="modal-commission">
-          <div class="modal">
-            <div class="modal-head"><h3 id="comm-modal-title">Nova comissão</h3><button class="modal-close" onclick="closeModal('modal-commission')">✕</button></div>
-            <div class="modal-body">
-              <input type="hidden" id="comm-id">
-              <div class="field"><label>Funcionário</label><select id="comm-employee"><option value="">Padrão (todos)</option></select></div>
-              <div class="field"><label>Tipo</label><select id="comm-type">
-                <option value="service_percent">% sobre serviço</option>
-                <option value="service_fixed">Fixo por serviço</option>
-                <option value="product_percent">% sobre produto</option>
-                <option value="product_fixed">Fixo por produto</option>
-              </select></div>
-              <div class="field"><label>Valor</label><input type="number" step="0.01" id="comm-value"></div>
-              <div class="field"><label>Pagamento</label><select id="comm-period">
-                <option value="daily">Diário</option>
-                <option value="weekly">Semanal</option>
-                <option value="monthly">Mensal</option>
-              </select></div>
-            </div>
-            <div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal('modal-commission')">Cancelar</button><button class="btn btn-primary" id="btn-save-commission">Salvar</button></div>
-          </div>
-        </div>
-        <!-- Modal de assinatura do dono (similar ao modal-pay do cliente) -->
-        <div class="modal-overlay" id="modal-owner-pay">
-          <div class="modal">
-            <div class="modal-head"><h3>Assinar plano</h3><button class="modal-close" onclick="closeModal('modal-owner-pay')">✕</button></div>
-            <div class="modal-body" id="modal-owner-pay-body"></div>
-          </div>
-        </div>
-      `;
-      initDono(user);
-    }
-
-    function initDono(user) {
-      let SETTINGS = null;
-      const WEEKDAYS_UI = [["seg","Segunda"],["ter","Terça"],["qua","Quarta"],["qui","Quinta"],["sex","Sexta"],["sab","Sábado"],["dom","Domingo"]];
-      let chartService, chartEmployee;
-
-      const titlesMap = {
-        dashboard: ["Dashboard", "Visão geral do negócio"],
-        agenda: ["Agenda geral", "Todos os agendamentos da barbearia"],
-        funcionarios: ["Funcionários", "Cadastre e gerencie sua equipe"],
-        servicos: ["Serviços", "Tipos de serviço oferecidos"],
-        bloqueios: ["Bloqueios de horário", "Bloqueie datas/horários gerais ou de um funcionário"],
-        clientes: ["Clientes", "Cadastre e gerencie clientes"],
-        produtos: ["Produtos", "Itens à venda na barbearia"],
-        planos: ["Planos", "Planos de assinatura oferecidos aos clientes"],
-        comissoes: ["Comissões", "Configurar comissões dos funcionários"],
-        "meu-plano": ["Meu Plano", "Gerenciar assinatura do sistema"],
-        config: ["Configurações do sistema", "Nome do sistema e horário geral"],
-        exportar: ["Exportar dados", "Baixe seus dados em CSV"],
-      };
-
-      function setPageTitle(tab) {
-        const t = titlesMap[tab];
-        if (t) document.getElementById("page-title").innerHTML = `${t[0]}<span id="page-sub">${t[1]}</span>`;
-      }
-
-      initTabs(tab => {
-        setPageTitle(tab);
-        if (tab === "dashboard") renderDashboard();
-        if (tab === "agenda") renderAgendaGeral();
-        if (tab === "funcionarios") renderEmployees();
-        if (tab === "servicos") renderServices();
-        if (tab === "bloqueios") { populateBlockEmployeeSelect(); renderBlocks(); }
-        if (tab === "clientes") renderClients();
-        if (tab === "produtos") renderProducts();
-        if (tab === "planos") renderPlans(); // planos da barbearia
-        if (tab === "comissoes") renderCommissionSettings();
-        if (tab === "meu-plano") renderOwnerPlan();
-        if (tab === "config") renderConfigTab();
-      });
-
-      setupSidebarToggle();
-      document.getElementById("btn-logout").addEventListener("click", logout);
-      document.getElementById("avatar-name").textContent = user.NAME || user.USER;
-      document.getElementById("avatar-initials").textContent = initials(user.NAME || user.USER);
-
-      // Carregar settings, notificações, etc.
-      (async () => {
-        await loadSettings();
-        await initNotifications(user);
-        renderDashboard();
-        // Preencher select de funcionários para comissões
-        const employees = await db.select("BD_USERS", `?select=USER,NAME&SYSTEM=eq.${pgEsc(user.SYSTEM)}&LEVEL=eq.00&ACTIVE=eq.true`);
-        const sel = document.getElementById("comm-employee");
-        if (sel) {
-          sel.innerHTML = '<option value="">Padrão (todos)</option>' + (employees||[]).map(e => `<option value="${e.USER}">${escapeHtml(e.NAME)}</option>`).join("");
-        }
-      })();
-
-      // ---------- COMISSÕES ----------
-      document.getElementById("btn-new-commission")?.addEventListener("click", () => openCommissionModal());
-      document.getElementById("btn-save-commission")?.addEventListener("click", saveCommission);
-
-      async function renderCommissionSettings() {
-        const tbody = document.getElementById("commissions-tbody");
-        if (!tbody) return;
-        tbody.innerHTML = `<tr><td colspan="5" class="table-empty">Carregando...</td></tr>`;
-        const rows = await db.select("COMMISSION_SETTINGS", `?select=*&SYSTEM=eq.${pgEsc(user.SYSTEM)}&order=EMPLOYEE_USER.asc`);
-        const employees = await db.select("BD_USERS", `?select=USER,NAME&SYSTEM=eq.${pgEsc(user.SYSTEM)}&LEVEL=eq.00`);
-        if (!rows || rows.length === 0) { tbody.innerHTML = `<tr><td colspan="5" class="table-empty">Nenhuma regra cadastrada.</td></tr>`; return; }
-        tbody.innerHTML = rows.map(r => {
-          const emp = r.EMPLOYEE_USER ? (employees.find(e => e.USER === r.EMPLOYEE_USER)?.NAME || r.EMPLOYEE_USER) : "Todos";
-          const typeLabel = { service_percent: "% serviço", service_fixed: "Fixo serviço", product_percent: "% produto", product_fixed: "Fixo produto" }[r.TYPE] || r.TYPE;
-          const periodLabel = { daily: "Diário", weekly: "Semanal", monthly: "Mensal" }[r.PAYMENT_PERIOD] || r.PAYMENT_PERIOD;
-          return `<tr>
-            <td>${escapeHtml(emp)}</td>
-            <td>${typeLabel}</td>
-            <td>${r.TYPE.includes("percent") ? r.VALUE + "%" : money(r.VALUE)}</td>
-            <td>${periodLabel}</td>
-            <td><button class="btn btn-ghost btn-sm" data-edit-comm="${r.ID}">Editar</button> <button class="btn btn-danger btn-sm" data-del-comm="${r.ID}">Excluir</button></td>
-          </tr>`;
-        }).join("");
-        tbody.querySelectorAll("[data-edit-comm]").forEach(b => b.addEventListener("click", () => {
-          const comm = rows.find(r => r.ID == b.dataset.editComm);
-          openCommissionModal(comm);
-        }));
-        tbody.querySelectorAll("[data-del-comm]").forEach(b => b.addEventListener("click", async () => {
-          if (!confirm("Remover essa regra?")) return;
-          await db.remove("COMMISSION_SETTINGS", `?ID=eq.${b.dataset.delComm}`);
-          toast("Regra removida.", "success");
-          renderCommissionSettings();
-        }));
-      }
-
-      function openCommissionModal(comm) {
-        document.getElementById("comm-modal-title").textContent = comm ? "Editar comissão" : "Nova comissão";
-        document.getElementById("comm-id").value = comm?.ID || "";
-        document.getElementById("comm-employee").value = comm?.EMPLOYEE_USER || "";
-        document.getElementById("comm-type").value = comm?.TYPE || "service_percent";
-        document.getElementById("comm-value").value = comm?.VALUE || "";
-        document.getElementById("comm-period").value = comm?.PAYMENT_PERIOD || "monthly";
-        openModal("modal-commission");
-      }
-
-      async function saveCommission() {
-        const id = document.getElementById("comm-id").value;
-        const payload = {
-          SYSTEM: user.SYSTEM,
-          EMPLOYEE_USER: document.getElementById("comm-employee").value || null,
-          TYPE: document.getElementById("comm-type").value,
-          VALUE: Number(document.getElementById("comm-value").value || 0),
-          PAYMENT_PERIOD: document.getElementById("comm-period").value,
-        };
-        try {
-          if (id) await db.update("COMMISSION_SETTINGS", `?ID=eq.${id}`, payload);
-          else await db.insert("COMMISSION_SETTINGS", payload);
-          toast("Comissão salva!", "success");
-          closeModal("modal-commission");
-          renderCommissionSettings();
-        } catch (e) { toast("Erro ao salvar comissão.", "error"); }
-      }
-
-      // ---------- MEU PLANO (assinatura do dono) ----------
-      async function renderOwnerPlan() {
-        const grid = document.getElementById("owner-plans-grid");
-        const info = document.getElementById("current-subscription");
-        if (!grid) return;
-        grid.innerHTML = `<div class="empty-state"><p>Carregando...</p></div>`;
-        const plans = await db.select("OWNER_PLANS", "?select=*&ACTIVE=eq.true&order=PRICE.asc");
-        const subscription = (await db.select("OWNER_SUBSCRIPTIONS", `?select=*&OWNER_USER=eq.${pgEsc(user.USER)}&order=ID.desc&limit=1`))[0] || null;
-
-        // Exibir assinatura atual
-        if (subscription && subscription.STATE === 'ativo') {
-          const plan = plans.find(p => p.ID == subscription.PLAN_ID);
-          info.innerHTML = `<p><strong>Plano atual:</strong> ${plan?.NAME || "Desconhecido"} (${money(plan?.PRICE||0)}) - Válido até ${subscription.END_DATE || "indeterminado"}</p>`;
-        } else {
-          info.innerHTML = `<p>Você ainda não possui um plano ativo. Escolha abaixo:</p>`;
-        }
-
-        if (!plans || plans.length === 0) {
-          grid.innerHTML = `<div class="empty-state"><p>Nenhum plano disponível.</p></div>`;
-          return;
-        }
-        grid.innerHTML = "";
-        plans.forEach(plan => {
-          const card = document.createElement("div");
-          card.className = "card plan-card";
-          card.innerHTML = `
-            <div class="plan-name">${escapeHtml(plan.NAME)}</div>
-            <div class="plan-price">${money(plan.PRICE)}<span>/mês</span></div>
-            <div class="plan-desc">${escapeHtml(plan.FEATURES||"")}</div>
-            <button class="btn btn-primary btn-block" data-plan-id="${plan.ID}">Assinar</button>
-          `;
-          card.querySelector("button").addEventListener("click", () => openOwnerPayModal(plan));
-          grid.appendChild(card);
-        });
-      }
-
-      function openOwnerPayModal(plan) {
-        const body = document.getElementById("modal-owner-pay-body");
-        body.innerHTML = `
-          <p style="margin-bottom:16px;color:var(--text-muted);">Plano <strong style="color:var(--text)">${escapeHtml(plan.NAME)}</strong> — ${money(plan.PRICE)}/mês</p>
-          <div class="pay-method-grid" id="pay-methods">
-            <div class="pay-method active" data-pay="pix">Pix</div>
-            <div class="pay-method" data-pay="credito">Crédito</div>
-            <div class="pay-method" data-pay="debito">Débito</div>
-          </div>
-          <div id="pay-content">${generatePixPlaceholder()}</div>
-        `;
-        let selectedMethod = "pix";
-        body.querySelector("#pay-methods").addEventListener("click", e => {
-          const el = e.target.closest(".pay-method");
-          if (!el) return;
-          body.querySelectorAll(".pay-method").forEach(p => p.classList.remove("active"));
-          el.classList.add("active");
-          selectedMethod = el.dataset.pay;
-          document.getElementById("pay-content").innerHTML = selectedMethod === "pix" ? generatePixPlaceholder() : `<p>Pagamento via ${selectedMethod} (simulação).</p>`;
-        });
-        document.getElementById("pay-content").innerHTML = generatePixPlaceholder();
-        function generatePixPlaceholder() {
-          return `<div class="pix-box">
-            <div>QR Code fictício</div>
-            <div class="pix-code">00020126580014BR.GOV.BCB.PIX0136exemplo-${plan.ID}</div>
-          </div>
-          <button class="btn btn-primary btn-block" style="margin-top:14px;" id="btn-confirm-owner-pay">Confirmar assinatura</button>`;
-        }
-        openModal("modal-owner-pay");
-        document.getElementById("btn-confirm-owner-pay").addEventListener("click", async () => {
-          try {
-            await db.insert("OWNER_SUBSCRIPTIONS", {
-              OWNER_USER: user.USER,
-              PLAN_ID: plan.ID,
-              STATE: "ativo",
-              TYPE_PAY: selectedMethod,
-              START_DATE: toISODate(new Date()),
-              END_DATE: null,
-            });
-            toast("Assinatura ativada!", "success");
-            closeModal("modal-owner-pay");
-            renderOwnerPlan();
-          } catch (e) {
-            toast("Erro ao assinar.", "error");
-          }
-        });
-      }
-
-      // Os outros métodos (renderDashboard, renderAgendaGeral, etc.) são os mesmos do código anterior do dono.
-      // Devido ao espaço, confie que eles já existem. Caso não, você pode colar os trechos anteriores.
-      // Por exemplo, mantenha as funções: loadSettings, renderDashboard, renderAgendaGeral, renderEmployees, renderServices, etc.
-      // O importante é que as novas abas estão prontas.
-    }
-  </script>
-
-      // ========== PAINEL CLIENTE (COMPLETO) ==========
+    // ======================== CLIENTE PANEL ========================
     function showClientePanel(user) {
       document.getElementById("app-root").innerHTML = `
         <div class="app-shell">
@@ -989,10 +595,7 @@
               </div>
             </header>
             <main class="content">
-              <section class="tab-panel active" data-tab-panel="agendamentos">
-                <div class="section-head"><div><h2>Meus agendamentos</h2><p>Seus horários marcados nesta barbearia</p></div></div>
-                <div id="appt-list"></div>
-              </section>
+              <section class="tab-panel active" data-tab-panel="agendamentos"><div class="section-head"><div><h2>Meus agendamentos</h2><p>Seus horários marcados nesta barbearia</p></div></div><div id="appt-list"></div></section>
               <section class="tab-panel" data-tab-panel="agendar">
                 <div class="section-head"><div><h2>Agendar horário</h2><p>Escolha data, período, serviço e barbeiro</p></div></div>
                 <div class="grid grid-2" style="align-items:start;">
@@ -1006,49 +609,19 @@
                   </div>
                 </div>
               </section>
-              <section class="tab-panel" data-tab-panel="plano">
-                <div class="section-head"><div><h2>Plano</h2><p>Escolha um plano e mantenha sua conta ativa</p></div></div>
-                <div class="grid grid-3" id="plans-grid"></div>
-              </section>
-              <section class="tab-panel" data-tab-panel="produtos">
-                <div class="section-head"><div><h2>Produtos</h2><p>Itens disponíveis para compra na barbearia</p></div></div>
-                <div class="grid grid-3" id="products-grid"></div>
-              </section>
+              <section class="tab-panel" data-tab-panel="plano"><div class="section-head"><div><h2>Plano</h2><p>Escolha um plano e mantenha sua conta ativa</p></div></div><div class="grid grid-3" id="plans-grid"></div></section>
+              <section class="tab-panel" data-tab-panel="produtos"><div class="section-head"><div><h2>Produtos</h2><p>Itens disponíveis para compra na barbearia</p></div></div><div class="grid grid-3" id="products-grid"></div></section>
               <section class="tab-panel" data-tab-panel="config">
                 <div class="section-head"><div><h2>Configurações</h2><p>Seus dados pessoais e forma de pagamento</p></div></div>
                 <div class="grid grid-2" style="align-items:start;">
-                  <div class="card">
-                    <h3 style="margin-bottom:16px;font-size:15px;">Dados pessoais</h3>
-                    <div class="field"><label>Nome</label><input type="text" id="cfg-name"></div>
-                    <div class="field"><label>E-mail</label><input type="email" id="cfg-email"></div>
-                    <div class="field"><label>Telefone</label><input type="tel" id="cfg-number"></div>
-                    <button class="btn btn-primary" id="btn-save-personal">Salvar dados</button>
-                  </div>
-                  <div class="card">
-                    <h3 style="margin-bottom:16px;font-size:15px;">Forma de pagamento do plano</h3>
-                    <div class="pay-method-grid" id="cfg-pay-methods">
-                      <div class="pay-method" data-pay="pix">Pix</div>
-                      <div class="pay-method" data-pay="credito">Crédito</div>
-                      <div class="pay-method" data-pay="debito">Débito</div>
-                      <div class="pay-method" data-pay="dinheiro">Dinheiro</div>
-                    </div>
-                    <div id="cfg-card-fields">
-                      <div class="field"><label>Número do cartão</label><input type="text" id="cfg-card" placeholder="0000 0000 0000 0000"></div>
-                      <div class="field-row"><div class="field"><label>Validade</label><input type="text" id="cfg-date" placeholder="MM/AA"></div><div class="field"><label>CVV</label><input type="text" id="cfg-code" placeholder="123"></div></div>
-                    </div>
-                    <button class="btn btn-primary" id="btn-save-pay">Salvar forma de pagamento</button>
-                  </div>
+                  <div class="card"><h3 style="margin-bottom:16px;font-size:15px;">Dados pessoais</h3><div class="field"><label>Nome</label><input type="text" id="cfg-name"></div><div class="field"><label>E-mail</label><input type="email" id="cfg-email"></div><div class="field"><label>Telefone</label><input type="tel" id="cfg-number"></div><button class="btn btn-primary" id="btn-save-personal">Salvar dados</button></div>
+                  <div class="card"><h3 style="margin-bottom:16px;font-size:15px;">Forma de pagamento do plano</h3><div class="pay-method-grid" id="cfg-pay-methods"><div class="pay-method" data-pay="pix">Pix</div><div class="pay-method" data-pay="credito">Crédito</div><div class="pay-method" data-pay="debito">Débito</div><div class="pay-method" data-pay="dinheiro">Dinheiro</div></div><div id="cfg-card-fields"><div class="field"><label>Número do cartão</label><input type="text" id="cfg-card" placeholder="0000 0000 0000 0000"></div><div class="field-row"><div class="field"><label>Validade</label><input type="text" id="cfg-date" placeholder="MM/AA"></div><div class="field"><label>CVV</label><input type="text" id="cfg-code" placeholder="123"></div></div></div><button class="btn btn-primary" id="btn-save-pay">Salvar forma de pagamento</button></div>
                 </div>
               </section>
             </main>
           </div>
         </div>
-        <div class="modal-overlay" id="modal-pay">
-          <div class="modal">
-            <div class="modal-head"><h3>Assinar plano</h3><button class="modal-close" onclick="closeModal('modal-pay')">✕</button></div>
-            <div class="modal-body" id="modal-pay-body"></div>
-          </div>
-        </div>
+        <div class="modal-overlay" id="modal-pay"><div class="modal"><div class="modal-head"><h3>Assinar plano</h3><button class="modal-close" onclick="closeModal('modal-pay')">✕</button></div><div class="modal-body" id="modal-pay-body"></div></div></div>
       `;
       initCliente(user);
     }
@@ -1182,10 +755,10 @@
             cursor += interval;
           }
         }
-        const nowDate = new Date();
-        const isToday = toISODate(nowDate) === isoDate;
+        const now = new Date();
+        const isToday = toISODate(now) === isoDate;
         let times = Object.keys(rawSlots).sort();
-        if (isToday) times = times.filter(t => { const [h,m] = t.split(":").map(Number); return h*60+m > nowDate.getHours()*60+nowDate.getMinutes(); });
+        if (isToday) times = times.filter(t => { const [h,m] = t.split(":").map(Number); return h*60+m > now.getHours()*60+now.getMinutes(); });
         if (selectedPeriod !== "all") times = times.filter(t => periodOf(t) === selectedPeriod);
         slotEmployeeMap = {};
         times.forEach(t => slotEmployeeMap[t] = Array.from(rawSlots[t]));
@@ -1254,13 +827,13 @@
         listEl.innerHTML = `<div class="empty-state"><p>Carregando...</p></div>`;
         const rows = (await db.select("APPOINTMENTS", `?select=*&CLIENT_USER=eq.${pgEsc(user.USER)}&order=DATE.desc,TIME.desc`)) || [];
         if (rows.length === 0) { listEl.innerHTML = `<div class="empty-state"><p>Você ainda não tem agendamentos.</p></div>`; return; }
-        const nowDate = new Date();
+        const now = new Date();
         listEl.innerHTML = "";
         rows.forEach(a => {
           const service = SERVICES.find(s => s.ID === a.SERVICE_ID);
           const emp = EMPLOYEES.find(e => e.USER === a.EMPLOYEE_USER);
           const dt = new Date(a.DATE + "T" + (a.TIME || "00:00"));
-          const isFuture = dt > nowDate && a.STATUS === "agendado";
+          const isFuture = dt > now && a.STATUS === "agendado";
           let badge = { agendado: '<span class="badge badge-gold">Agendado</span>', concluido: '<span class="badge badge-green">Concluído</span>', cancelado: '<span class="badge badge-red">Cancelado</span>' }[a.STATUS] || "";
           const [y,m,d] = a.DATE.split("-");
           const card = document.createElement("div");
@@ -1275,7 +848,11 @@
         listEl.querySelectorAll("[data-cancel]").forEach(btn => {
           btn.addEventListener("click", async () => {
             if (!confirm("Cancelar este agendamento?")) return;
-            try { await db.update("APPOINTMENTS", `?ID=eq.${btn.dataset.cancel}`, { STATUS: "cancelado" }); toast("Agendamento cancelado.", "success"); renderAppointments(); } catch (e) { toast("Erro ao cancelar.", "error"); }
+            try {
+              await db.update("APPOINTMENTS", `?ID=eq.${btn.dataset.cancel}`, { STATUS: "cancelado" });
+              toast("Agendamento cancelado.", "success");
+              renderAppointments();
+            } catch (e) { toast("Erro ao cancelar.", "error"); }
           });
         });
       }
@@ -1304,8 +881,10 @@
         });
         if (CLIENT_ROW && CLIENT_ROW.STATE && CLIENT_ROW.STATE !== "ativo") {
           const warn = document.createElement("div");
-          warn.className = "card"; warn.style.gridColumn = "1/-1"; warn.style.borderColor = "var(--red-soft)";
-          warn.innerHTML = `<strong style="color:var(--red-soft);">Atenção:</strong> sua conta está com status "${CLIENT_ROW.STATE}". Assine ou regularize seu plano.`;
+          warn.className = "card";
+          warn.style.gridColumn = "1/-1";
+          warn.style.borderColor = "var(--red-soft)";
+          warn.innerHTML = `<strong style="color:var(--red-soft);">Atenção:</strong> sua conta está com status "${CLIENT_ROW.STATE}". Assine ou regularize seu plano para conseguir agendar.`;
           grid.prepend(warn);
         }
       }
@@ -1342,19 +921,19 @@
               <div style="width:140px;height:140px;margin:0 auto;background:repeating-conic-gradient(var(--surface-3) 0 25%, var(--surface) 0 50%) 0 0/20px 20px;border-radius:8px;"></div>
               <div class="pix-code">00020126580014BR.GOV.BCB.PIX0136ilustrativo-asaas-${plan.ID}-${Date.now()}5204000053039865802BR5920BARBEARIA LTDA6009SAO PAULO62070503***6304ABCD</div>
             </div>
-            <p class="help-text" style="text-align:center;margin-top:10px;">Integração de cobrança Asaas ilustrativa.</p>
+            <p class="help-text" style="text-align:center;margin-top:10px;">Integração de cobrança Asaas ilustrativa — ainda não processa pagamento real.</p>
             <button class="btn btn-primary btn-block" style="margin-top:14px;" id="btn-confirm-pay">Já paguei / confirmar</button>
           `;
         } else if (selectedPayMethod === "dinheiro") {
           el.innerHTML = `
-            <p style="font-size:13.5px;color:var(--text-muted);">Pagamento em dinheiro no balcão. Sua assinatura ficará <strong style="color:var(--text)">pendente</strong> até confirmação.</p>
+            <p style="font-size:13.5px;color:var(--text-muted);">Você poderá pagar em dinheiro diretamente no balcão. Sua assinatura ficará <strong style="color:var(--text)">pendente</strong> até a confirmação do dono.</p>
             <button class="btn btn-primary btn-block" style="margin-top:14px;" id="btn-confirm-pay">Solicitar plano</button>
           `;
         } else {
           el.innerHTML = `
             <div class="field"><label>Número do cartão</label><input type="text" id="pay-card" placeholder="0000 0000 0000 0000"></div>
             <div class="field-row"><div class="field"><label>Validade</label><input type="text" id="pay-date" placeholder="MM/AA"></div><div class="field"><label>CVV</label><input type="text" id="pay-code" placeholder="123"></div></div>
-            <p class="help-text">Integração de cobrança Asaas ilustrativa.</p>
+            <p class="help-text">Integração de cobrança Asaas ilustrativa — dados não são processados de verdade.</p>
             <button class="btn btn-primary btn-block" style="margin-top:6px;" id="btn-confirm-pay">Pagar agora</button>
           `;
         }
@@ -1371,13 +950,13 @@
             payload.CODE = document.getElementById("pay-code")?.value || "";
           } else { payload.CARD = null; payload.DATE = null; payload.CODE = null; }
           await db.update("CLIENT_USER", `?USER=eq.${pgEsc(user.USER)}`, payload);
-          await notifyUser(user.USER, user.SYSTEM, `Plano "${plan.NAME}" ${selectedPayMethod==="dinheiro"?"solicitado":"assinado"}.`);
+          await notifyUser(user.USER, user.SYSTEM, `Plano "${plan.NAME}" ${selectedPayMethod==="dinheiro"?"solicitado (pendente de confirmação)":"assinado com sucesso"}.`);
           const owners = await db.select("BD_USERS", `?select=USER&SYSTEM=eq.${pgEsc(user.SYSTEM)}&LEVEL=eq.000&limit=1`);
-          if (owners && owners[0]) await notifyUser(owners[0].USER, user.SYSTEM, `${user.NAME||user.USER} assinou o plano "${plan.NAME}".`);
+          if (owners && owners[0]) await notifyUser(owners[0].USER, user.SYSTEM, `${user.NAME||user.USER} assinou o plano "${plan.NAME}" via ${selectedPayMethod}.`);
           toast("Plano atualizado!", "success");
           closeModal("modal-pay");
           renderPlans();
-        } catch (e) { toast("Erro ao processar.", "error"); }
+        } catch (e) { console.error(e); toast("Erro ao processar.", "error"); }
         finally { btn.disabled = false; }
       }
 
@@ -1457,7 +1036,7 @@
         finally { btn.disabled = false; }
       });
 
-      // Init
+      // Inicialização
       (async () => {
         await loadSettings();
         await loadServices();
@@ -1469,11 +1048,819 @@
       })();
     }
 
-    // ========== INICIALIZAÇÃO ==========
+    // ======================== FUNCIONARIO PANEL ========================
+    function showFuncionarioPanel(user) {
+      document.getElementById("app-root").innerHTML = `
+        <div class="app-shell">
+          <aside class="sidebar" id="sidebar">
+            <div class="brand"><div class="brand-mark">✂ <span id="sys-name">BarberOS</span></div><div class="brand-sub">Área do funcionário</div></div>
+            <a class="nav-item stripe-underline active" data-tab-btn="agenda"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg> Minha agenda</a>
+            <a class="nav-item stripe-underline hidden" id="nav-servicos" data-tab-btn="servicos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6M9 6l9 9-3 3-9-9M3 21l4-1 10-10-3-3L4 17z"/></svg> Serviços</a>
+            <a class="nav-item stripe-underline hidden" id="nav-clientes" data-tab-btn="clientes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg> Clientes</a>
+            <a class="nav-item stripe-underline hidden" id="nav-bloqueios" data-tab-btn="bloqueios"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M5 5l14 14"/></svg> Bloqueios</a>
+            <a class="nav-item stripe-underline hidden" id="nav-produtos" data-tab-btn="produtos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4M4 7l8 4m-8-4v10l8 4m0-10v10"/></svg> Produtos</a>
+            <a class="nav-item stripe-underline" data-tab-btn="config"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82"/></svg> Configurações</a>
+            <div class="nav-spacer"></div>
+            <a class="nav-item logout" id="btn-logout"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg> Sair</a>
+          </aside>
+          <div class="main">
+            <header class="topbar">
+              <div style="display:flex;align-items:center;gap:12px;"><button class="menu-toggle" id="menu-toggle">☰</button><div class="topbar-title" id="page-title">Minha agenda<span id="page-sub">Seus próximos atendimentos</span></div></div>
+              <div class="topbar-right">
+                <div class="bell-wrap"><button class="bell-btn" id="bell-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg><span class="bell-dot" id="bell-dot"></span></button><div class="notif-panel" id="notif-panel"></div></div>
+                <div class="avatar-chip"><div class="avatar-circle" id="avatar-initials">--</div><div><div class="avatar-name" id="avatar-name">Carregando...</div><div class="avatar-role">Funcionário</div></div></div>
+              </div>
+            </header>
+            <main class="content">
+              <section class="tab-panel active" data-tab-panel="agenda"><div class="section-head"><div><h2>Minha agenda</h2><p>Atendimentos marcados com você</p></div></div>
+                <div class="chip-row" style="margin-bottom:16px;" id="agenda-filter"><div class="chip active" data-f="futuros">Futuros</div><div class="chip" data-f="hoje">Hoje</div><div class="chip" data-f="todos">Todos</div></div>
+                <div id="agenda-list"></div>
+              </section>
+              <section class="tab-panel" data-tab-panel="servicos"><div class="section-head"><div><h2>Serviços</h2><p>Tipos de serviço oferecidos pela barbearia</p></div><button class="btn btn-primary" id="btn-new-service">+ Novo serviço</button></div><div class="table-wrap"><table><thead><tr><th>Nome</th><th>Preço</th><th>Duração</th><th>Status</th><th></th></tr></thead><tbody id="services-tbody"></tbody></table></div></section>
+              <section class="tab-panel" data-tab-panel="clientes"><div class="section-head"><div><h2>Clientes</h2><p>Base de clientes da barbearia</p></div></div><div class="table-wrap"><table><thead><tr><th>Nome</th><th>Telefone</th><th>E-mail</th><th>Plano</th><th>Status</th></tr></thead><tbody id="clients-tbody"></tbody></table></div></section>
+              <section class="tab-panel" data-tab-panel="bloqueios"><div class="section-head"><div><h2>Bloqueios</h2><p>Bloqueie datas/horários da sua própria agenda</p></div></div>
+                <div class="grid grid-2" style="align-items:start;">
+                  <div class="card"><div class="field"><label>Data</label><input type="date" id="blk-date"></div><div class="field-row"><div class="field"><label>Das</label><input type="time" id="blk-start"></div><div class="field"><label>Até</label><input type="time" id="blk-end"></div></div><div class="field"><label>Motivo (opcional)</label><input type="text" id="blk-reason"></div><button class="btn btn-primary btn-block" id="btn-add-block">Bloquear horário</button></div>
+                  <div class="card"><h3 style="font-size:14px;margin-bottom:12px;">Meus bloqueios ativos</h3><div id="blocks-list"></div></div>
+                </div>
+              </section>
+              <section class="tab-panel" data-tab-panel="produtos"><div class="section-head"><div><h2>Produtos</h2><p>Produtos vendidos pela barbearia</p></div><button class="btn btn-primary" id="btn-new-product">+ Novo produto</button></div><div class="table-wrap"><table><thead><tr><th>Nome</th><th>Preço</th><th>Estoque</th><th>Status</th><th></th></tr></thead><tbody id="products-tbody"></tbody></table></div></section>
+              <section class="tab-panel" data-tab-panel="config"><div class="section-head"><div><h2>Configurações</h2><p>Altere sua senha de acesso</p></div></div><div class="card" style="max-width:420px;"><div class="field"><label>Nova senha</label><input type="password" id="new-pass"></div><button class="btn btn-primary" id="btn-change-pass">Alterar senha</button></div></section>
+            </main>
+          </div>
+        </div>
+        <div class="modal-overlay" id="modal-service"><div class="modal"><div class="modal-head"><h3 id="service-modal-title">Novo serviço</h3><button class="modal-close" onclick="closeModal('modal-service')">✕</button></div><div class="modal-body"><input type="hidden" id="svc-id"><div class="field"><label>Nome</label><input type="text" id="svc-name"></div><div class="field-row"><div class="field"><label>Preço (R$)</label><input type="number" step="0.01" id="svc-price"></div><div class="field"><label>Duração (min)</label><input type="number" id="svc-duration"></div></div><div class="checkbox-row"><input type="checkbox" id="svc-active" checked><label for="svc-active">Serviço ativo</label></div></div><div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal('modal-service')">Cancelar</button><button class="btn btn-primary" id="btn-save-service">Salvar</button></div></div></div>
+        <div class="modal-overlay" id="modal-product"><div class="modal"><div class="modal-head"><h3 id="product-modal-title">Novo produto</h3><button class="modal-close" onclick="closeModal('modal-product')">✕</button></div><div class="modal-body"><input type="hidden" id="prd-id"><div class="field"><label>Nome</label><input type="text" id="prd-name"></div><div class="field-row"><div class="field"><label>Preço (R$)</label><input type="number" step="0.01" id="prd-price"></div><div class="field"><label>Estoque</label><input type="number" id="prd-stock"></div></div><div class="checkbox-row"><input type="checkbox" id="prd-active" checked><label for="prd-active">Produto ativo</label></div></div><div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal('modal-product')">Cancelar</button><button class="btn btn-primary" id="btn-save-product">Salvar</button></div></div></div>
+      `;
+      initFuncionario(user);
+    }
+
+    function initFuncionario(user) {
+      let SETTINGS = null, SERVICES_CACHE = [], agendaFilter = "futuros";
+
+      const titlesMap = {
+        agenda: ["Minha agenda", "Seus próximos atendimentos"],
+        servicos: ["Serviços", "Tipos de serviço oferecidos pela barbearia"],
+        clientes: ["Clientes", "Base de clientes da barbearia"],
+        bloqueios: ["Bloqueios", "Bloqueie datas/horários da sua própria agenda"],
+        produtos: ["Produtos", "Produtos vendidos pela barbearia"],
+        config: ["Configurações", "Altere sua senha de acesso"],
+      };
+
+      function setPageTitle(tab) {
+        const t = titlesMap[tab];
+        if (t) document.getElementById("page-title").innerHTML = `${t[0]}<span id="page-sub">${t[1]}</span>`;
+      }
+
+      initTabs(tab => {
+        setPageTitle(tab);
+        if (tab === "servicos") renderServices();
+        if (tab === "clientes") renderClients();
+        if (tab === "bloqueios") renderBlocks();
+        if (tab === "produtos") renderProducts();
+      });
+
+      setupSidebarToggle();
+      document.getElementById("btn-logout").addEventListener("click", logout);
+      document.getElementById("avatar-name").textContent = user.NAME || user.USER;
+      document.getElementById("avatar-initials").textContent = initials(user.NAME || user.USER);
+
+      const perms = user.PERMISSIONS || {};
+      document.getElementById("nav-servicos").classList.toggle("hidden", !perms.servicos);
+      document.getElementById("nav-clientes").classList.toggle("hidden", !perms.clientes);
+      document.getElementById("nav-bloqueios").classList.toggle("hidden", !perms.bloqueios);
+      document.getElementById("nav-produtos").classList.toggle("hidden", !perms.produtos);
+
+      async function loadSettings() {
+        const rows = await db.select("SETTINGS", `?select=*&SYSTEM=eq.${pgEsc(user.SYSTEM)}&limit=1`);
+        SETTINGS = (rows && rows[0]) || { SYSTEM_NAME: "BarberOS" };
+        document.getElementById("sys-name").textContent = SETTINGS.SYSTEM_NAME || "BarberOS";
+      }
+
+      async function renderAgenda() {
+        const listEl = document.getElementById("agenda-list");
+        listEl.innerHTML = `<div class="empty-state"><p>Carregando...</p></div>`;
+        SERVICES_CACHE = (await db.select("SERVICES", `?select=*&SYSTEM=eq.${pgEsc(user.SYSTEM)}`)) || [];
+        let query = `?select=*&EMPLOYEE_USER=eq.${pgEsc(user.USER)}&order=DATE.asc,TIME.asc`;
+        const todayISO = toISODate(new Date());
+        if (agendaFilter === "hoje") query += `&DATE=eq.${todayISO}`;
+        if (agendaFilter === "futuros") query += `&DATE=gte.${todayISO}&STATUS=eq.agendado`;
+        const rows = (await db.select("APPOINTMENTS", query)) || [];
+        if (rows.length === 0) { listEl.innerHTML = `<div class="empty-state"><p>Nenhum agendamento encontrado.</p></div>`; return; }
+        const clientUsers = [...new Set(rows.map(r => r.CLIENT_USER))];
+        const clients = clientUsers.length ? (await db.select("BD_USERS", `?select=USER,NAME,NUMBER&USER=in.(${clientUsers.map(pgEsc).join(",")})`)) || [] : [];
+        listEl.innerHTML = "";
+        rows.forEach(a => {
+          const service = SERVICES_CACHE.find(s => s.ID === a.SERVICE_ID);
+          const client = clients.find(c => c.USER === a.CLIENT_USER);
+          const [y,m,d] = a.DATE.split("-");
+          const badge = { agendado: '<span class="badge badge-gold">Agendado</span>', concluido: '<span class="badge badge-green">Concluído</span>', cancelado: '<span class="badge badge-red">Cancelado</span>' }[a.STATUS] || "";
+          const card = document.createElement("div");
+          card.className = "appt-card";
+          card.innerHTML = `
+            <div class="appt-date"><div class="d">${d}</div><div class="m">${MONTH_NAMES[Number(m)-1].slice(0,3)}</div></div>
+            <div class="appt-info"><div class="service">${escapeHtml(client?.NAME || a.CLIENT_USER)} ${badge}</div><div class="meta">${escapeHtml(service?.NAME||"Serviço")} · ${a.TIME} ${client?.NUMBER ? "· "+escapeHtml(client.NUMBER) : ""}</div></div>
+            <div class="appt-actions">${a.STATUS === "agendado" ? `<button class="btn btn-outline btn-sm" data-done="${a.ID}">Concluir</button>` : ""}</div>
+          `;
+          listEl.appendChild(card);
+        });
+        listEl.querySelectorAll("[data-done]").forEach(btn => {
+          btn.addEventListener("click", async () => {
+            try {
+              await db.update("APPOINTMENTS", `?ID=eq.${btn.dataset.done}`, { STATUS: "concluido" });
+              toast("Atendimento concluído.", "success");
+              renderAgenda();
+            } catch (e) { toast("Erro ao atualizar.", "error"); }
+          });
+        });
+      }
+
+      document.getElementById("agenda-filter").addEventListener("click", e => {
+        const chip = e.target.closest(".chip");
+        if (!chip) return;
+        document.querySelectorAll("#agenda-filter .chip").forEach(c => c.classList.remove("active"));
+        chip.classList.add("active");
+        agendaFilter = chip.dataset.f;
+        renderAgenda();
+      });
+
+      // Services CRUD
+      async function renderServices() {
+        const tbody = document.getElementById("services-tbody");
+        tbody.innerHTML = `<tr><td colspan="5" class="table-empty">Carregando...</td></tr>`;
+        const rows = (await db.select("SERVICES", `?select=*&SYSTEM=eq.${pgEsc(user.SYSTEM)}&order=NAME.asc`)) || [];
+        if (rows.length === 0) { tbody.innerHTML = `<tr><td colspan="5" class="table-empty">Nenhum serviço cadastrado.</td></tr>`; return; }
+        tbody.innerHTML = rows.map(s => `
+          <tr>
+            <td><strong>${escapeHtml(s.NAME)}</strong></td><td>${money(s.PRICE)}</td><td>${s.DURATION_MIN} min</td>
+            <td>${s.ACTIVE?'<span class="badge badge-green">Ativo</span>':'<span class="badge badge-muted">Inativo</span>'}</td>
+            <td><button class="btn btn-ghost btn-sm" data-edit-service='${JSON.stringify(s).replace(/'/g,"&#39;")}'>Editar</button></td>
+          </tr>`).join("");
+        tbody.querySelectorAll("[data-edit-service]").forEach(btn => {
+          btn.addEventListener("click", () => openServiceModal(JSON.parse(btn.dataset.editService.replace(/&#39;/g,"'"))));
+        });
+      }
+
+      function openServiceModal(svc) {
+        document.getElementById("service-modal-title").textContent = svc ? "Editar serviço" : "Novo serviço";
+        document.getElementById("svc-id").value = svc?.ID || "";
+        document.getElementById("svc-name").value = svc?.NAME || "";
+        document.getElementById("svc-price").value = svc?.PRICE || "";
+        document.getElementById("svc-duration").value = svc?.DURATION_MIN || "";
+        document.getElementById("svc-active").checked = svc ? !!svc.ACTIVE : true;
+        openModal("modal-service");
+      }
+
+      document.getElementById("btn-new-service").addEventListener("click", () => openServiceModal());
+      document.getElementById("btn-save-service").addEventListener("click", async () => {
+        const id = document.getElementById("svc-id").value;
+        const payload = { NAME: document.getElementById("svc-name").value.trim(), PRICE: Number(document.getElementById("svc-price").value||0), DURATION_MIN: Number(document.getElementById("svc-duration").value||0), ACTIVE: document.getElementById("svc-active").checked };
+        try {
+          if (id) await db.update("SERVICES", `?ID=eq.${id}`, payload);
+          else await db.insert("SERVICES", { ...payload, SYSTEM: user.SYSTEM });
+          toast("Serviço salvo!", "success");
+          closeModal("modal-service");
+          renderServices();
+        } catch (e) { toast("Erro ao salvar serviço.", "error"); }
+      });
+
+      // Clients
+      async function renderClients() {
+        const tbody = document.getElementById("clients-tbody");
+        tbody.innerHTML = `<tr><td colspan="5" class="table-empty">Carregando...</td></tr>`;
+        const rows = (await db.select("CLIENT_USER", `?select=*&SYSTEM=eq.${pgEsc(user.SYSTEM)}&order=NAME.asc`)) || [];
+        if (rows.length === 0) { tbody.innerHTML = `<tr><td colspan="5" class="table-empty">Nenhum cliente cadastrado.</td></tr>`; return; }
+        tbody.innerHTML = rows.map(c => `
+          <tr><td><strong>${escapeHtml(c.NAME)}</strong></td><td>${escapeHtml(c.NUMBER||"-")}</td><td>${escapeHtml(c.EMAIL||"-")}</td><td>${escapeHtml(c.PLAN||"-")}</td><td>${badgeForState(c.STATE)}</td></tr>`).join("");
+      }
+      function badgeForState(state) {
+        if (state === "ativo") return '<span class="badge badge-green">Ativo</span>';
+        if (state === "pendente") return '<span class="badge badge-gold">Pendente</span>';
+        if (state === "inativo") return '<span class="badge badge-red">Inativo</span>';
+        return '<span class="badge badge-muted">Sem plano</span>';
+      }
+
+      // Blocks (próprios)
+      async function renderBlocks() {
+        const listEl = document.getElementById("blocks-list");
+        listEl.innerHTML = `<p class="help-text">Carregando...</p>`;
+        const rows = (await db.select("BLOCKED_SLOTS", `?select=*&SYSTEM=eq.${pgEsc(user.SYSTEM)}&EMPLOYEE_USER=eq.${pgEsc(user.USER)}&order=DATE.asc`)) || [];
+        if (rows.length === 0) { listEl.innerHTML = `<p class="help-text">Nenhum bloqueio ativo.</p>`; return; }
+        listEl.innerHTML = "";
+        rows.forEach(b => {
+          const div = document.createElement("div");
+          div.className = "appt-card"; div.style.marginBottom = "8px";
+          div.innerHTML = `
+            <div class="appt-info"><div class="service">${new Date(b.DATE+"T00:00").toLocaleDateString("pt-BR")}</div><div class="meta">${b.TIME_START} - ${b.TIME_END} ${b.REASON?"· "+escapeHtml(b.REASON):""}</div></div>
+            <div class="appt-actions"><button class="btn btn-danger btn-sm" data-del-block="${b.ID}">Remover</button></div>
+          `;
+          listEl.appendChild(div);
+        });
+        listEl.querySelectorAll("[data-del-block]").forEach(btn => {
+          btn.addEventListener("click", async () => {
+            await db.remove("BLOCKED_SLOTS", `?ID=eq.${btn.dataset.delBlock}`);
+            toast("Bloqueio removido.", "success");
+            renderBlocks();
+          });
+        });
+      }
+
+      document.getElementById("btn-add-block").addEventListener("click", async () => {
+        const date = document.getElementById("blk-date").value;
+        const start = document.getElementById("blk-start").value;
+        const end = document.getElementById("blk-end").value;
+        const reason = document.getElementById("blk-reason").value.trim();
+        if (!date || !start || !end) { toast("Preencha data e horário.", "error"); return; }
+        try {
+          await db.insert("BLOCKED_SLOTS", { SYSTEM: user.SYSTEM, EMPLOYEE_USER: user.USER, DATE: date, TIME_START: start, TIME_END: end, REASON: reason||null });
+          toast("Horário bloqueado.", "success");
+          document.getElementById("blk-date").value = ""; document.getElementById("blk-start").value = ""; document.getElementById("blk-end").value = ""; document.getElementById("blk-reason").value = "";
+          renderBlocks();
+        } catch (e) { toast("Erro ao bloquear.", "error"); }
+      });
+
+      // Products
+      async function renderProducts() {
+        const tbody = document.getElementById("products-tbody");
+        tbody.innerHTML = `<tr><td colspan="4" class="table-empty">Carregando...</td></tr>`;
+        const rows = (await db.select("PRODUCTS", `?select=*&SYSTEM=eq.${pgEsc(user.SYSTEM)}&order=NAME.asc`)) || [];
+        if (rows.length === 0) { tbody.innerHTML = `<tr><td colspan="4" class="table-empty">Nenhum produto cadastrado.</td></tr>`; return; }
+        tbody.innerHTML = rows.map(p => `
+          <tr><td><strong>${escapeHtml(p.NAME)}</strong></td><td>${money(p.PRICE)}</td><td>${p.STOCK}</td><td>${p.ACTIVE?'<span class="badge badge-green">Ativo</span>':'<span class="badge badge-muted">Inativo</span>'}</td></tr>`).join("");
+      }
+
+      document.getElementById("btn-new-product").addEventListener("click", () => openProductModal());
+      document.getElementById("btn-save-product").addEventListener("click", async () => {
+        const id = document.getElementById("prd-id").value;
+        const payload = { NAME: document.getElementById("prd-name").value.trim(), PRICE: Number(document.getElementById("prd-price").value||0), STOCK: Number(document.getElementById("prd-stock").value||0), ACTIVE: document.getElementById("prd-active").checked };
+        try {
+          if (id) await db.update("PRODUCTS", `?ID=eq.${id}`, payload);
+          else await db.insert("PRODUCTS", { ...payload, SYSTEM: user.SYSTEM });
+          toast("Produto salvo!", "success");
+          closeModal("modal-product");
+          renderProducts();
+        } catch (e) { toast("Erro ao salvar produto.", "error"); }
+      });
+      function openProductModal(p) {
+        document.getElementById("product-modal-title").textContent = p ? "Editar produto" : "Novo produto";
+        document.getElementById("prd-id").value = p?.ID || "";
+        document.getElementById("prd-name").value = p?.NAME || "";
+        document.getElementById("prd-price").value = p?.PRICE || "";
+        document.getElementById("prd-stock").value = p?.STOCK || 0;
+        document.getElementById("prd-active").checked = p ? !!p.ACTIVE : true;
+        openModal("modal-product");
+      }
+
+      // Password change
+      document.getElementById("btn-change-pass").addEventListener("click", async () => {
+        const pass = document.getElementById("new-pass").value;
+        if (!pass || pass.length < 4) { toast("Digite uma senha com pelo menos 4 caracteres.", "error"); return; }
+        try {
+          const hash = await hashPassword(pass);
+          await db.update("BD_USERS", `?USER=eq.${pgEsc(user.USER)}`, { PASSWORD: hash });
+          document.getElementById("new-pass").value = "";
+          toast("Senha alterada!", "success");
+        } catch (e) { toast("Erro ao alterar senha.", "error"); }
+      });
+
+      (async () => {
+        await loadSettings();
+        await initNotifications(user);
+        renderAgenda();
+      })();
+    }
+
+    // ======================== DONO PANEL ========================
+    function showDonoPanel(user) {
+      document.getElementById("app-root").innerHTML = `
+        <div class="app-shell">
+          <aside class="sidebar" id="sidebar">
+            <div class="brand"><div class="brand-mark">✂ <span id="sys-name">BarberOS</span></div><div class="brand-sub">Painel do dono</div></div>
+            <a class="nav-item stripe-underline active" data-tab-btn="dashboard"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 3v18h18M7 15l4-6 3 3 5-8"/></svg> Dashboard</a>
+            <a class="nav-item stripe-underline" data-tab-btn="agenda"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg> Agenda geral</a>
+            <a class="nav-item stripe-underline" data-tab-btn="funcionarios"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="8" r="3.2"/><path d="M2.5 20c0-3.5 3-5.5 6.5-5.5s6.5 2 6.5 5.5M16 8.5a3 3 0 100-6M19 14.5c2 .6 3 2 3 5.5"/></svg> Funcionários</a>
+            <a class="nav-item stripe-underline" data-tab-btn="servicos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6M9 6l9 9-3 3-9-9M3 21l4-1 10-10-3-3L4 17z"/></svg> Serviços</a>
+            <a class="nav-item stripe-underline" data-tab-btn="bloqueios"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M5 5l14 14"/></svg> Bloqueios</a>
+            <a class="nav-item stripe-underline" data-tab-btn="clientes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg> Clientes</a>
+            <a class="nav-item stripe-underline" data-tab-btn="produtos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4M4 7l8 4m-8-4v10l8 4m0-10v10"/></svg> Produtos</a>
+            <a class="nav-item stripe-underline" data-tab-btn="planos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2l3 6 6 1-4.5 4.5L18 20l-6-3-6 3 1.5-6.5L3 9l6-1z"/></svg> Planos</a>
+            <a class="nav-item stripe-underline" data-tab-btn="config"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82"/></svg> Configurações</a>
+            <a class="nav-item stripe-underline" data-tab-btn="exportar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 19h16"/></svg> Exportar dados</a>
+            <div class="nav-spacer"></div>
+            <a class="nav-item logout" id="btn-logout"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg> Sair</a>
+          </aside>
+          <div class="main">
+            <header class="topbar">
+              <div style="display:flex;align-items:center;gap:12px;"><button class="menu-toggle" id="menu-toggle">☰</button><div class="topbar-title" id="page-title">Dashboard<span id="page-sub">Visão geral do negócio</span></div></div>
+              <div class="topbar-right">
+                <div class="bell-wrap"><button class="bell-btn" id="bell-btn"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg><span class="bell-dot" id="bell-dot"></span></button><div class="notif-panel" id="notif-panel"></div></div>
+                <div class="avatar-chip"><div class="avatar-circle" id="avatar-initials">--</div><div><div class="avatar-name" id="avatar-name">Carregando...</div><div class="avatar-role">Dono</div></div></div>
+              </div>
+            </header>
+            <main class="content">
+              <!-- todos os painéis do dono -->
+              <section class="tab-panel active" data-tab-panel="dashboard">
+                <div class="section-head"><div><h2>Dashboard</h2><p>Visão geral do negócio</p></div></div>
+                <div class="grid grid-4" style="margin-bottom:20px;">
+                  <div class="card stat-card"><div class="stat-label">Faturamento (mês)</div><div class="stat-value" id="kpi-revenue">R$ 0</div><div class="stat-sub" id="kpi-revenue-sub">—</div></div>
+                  <div class="card stat-card"><div class="stat-label">Agendamentos hoje</div><div class="stat-value" id="kpi-today">0</div><div class="stat-sub">Concluídos + agendados</div></div>
+                  <div class="card stat-card"><div class="stat-label">Clientes ativos</div><div class="stat-value" id="kpi-clients">0</div><div class="stat-sub" id="kpi-clients-sub">—</div></div>
+                  <div class="card stat-card"><div class="stat-label">Ticket médio</div><div class="stat-value" id="kpi-ticket">R$ 0</div><div class="stat-sub">Por atendimento concluído</div></div>
+                </div>
+                <div class="grid grid-2">
+                  <div class="card"><h3 style="font-size:14px;margin-bottom:14px;">Faturamento por serviço</h3><canvas id="chart-service" height="220"></canvas></div>
+                  <div class="card"><h3 style="font-size:14px;margin-bottom:14px;">Agendamentos por funcionário</h3><canvas id="chart-employee" height="220"></canvas></div>
+                </div>
+              </section>
+              <section class="tab-panel" data-tab-panel="agenda"><div class="section-head"><div><h2>Agenda geral</h2><p>Todos os agendamentos da barbearia</p></div><input type="date" id="agenda-date-filter" style="width:auto;"></div><div class="table-wrap"><table><thead><tr><th>Data</th><th>Hora</th><th>Cliente</th><th>Funcionário</th><th>Serviço</th><th>Status</th></tr></thead><tbody id="agenda-geral-tbody"></tbody></table></div></section>
+              <section class="tab-panel" data-tab-panel="funcionarios"><div class="section-head"><div><h2>Funcionários</h2><p>Cadastre e gerencie sua equipe</p></div><button class="btn btn-primary" id="btn-new-emp">+ Novo funcionário</button></div><div class="table-wrap"><table><thead><tr><th>Nome</th><th>Usuário</th><th>Telefone</th><th>Status</th><th></th></tr></thead><tbody id="emp-tbody"></tbody></table></div></section>
+              <section class="tab-panel" data-tab-panel="servicos"><div class="section-head"><div><h2>Serviços</h2><p>Tipos de serviço oferecidos</p></div><button class="btn btn-primary" id="btn-new-service">+ Novo serviço</button></div><div class="table-wrap"><table><thead><tr><th>Nome</th><th>Preço</th><th>Duração</th><th>Status</th><th></th></tr></thead><tbody id="services-tbody"></tbody></table></div></section>
+              <section class="tab-panel" data-tab-panel="bloqueios"><div class="section-head"><div><h2>Bloqueios de horário</h2><p>Bloqueie datas/horários gerais ou de um funcionário</p></div></div><div class="grid grid-2" style="align-items:start;"><div class="card"><div class="field"><label>Funcionário</label><select id="blk-employee"><option value="">Toda a barbearia (geral)</option></select></div><div class="field"><label>Data</label><input type="date" id="blk-date"></div><div class="field-row"><div class="field"><label>Das</label><input type="time" id="blk-start"></div><div class="field"><label>Até</label><input type="time" id="blk-end"></div></div><div class="field"><label>Motivo (opcional)</label><input type="text" id="blk-reason"></div><button class="btn btn-primary btn-block" id="btn-add-block">Bloquear horário</button><p class="help-text">Agendamentos existentes nesse intervalo serão cancelados automaticamente e o cliente será notificado.</p></div><div class="card"><h3 style="font-size:14px;margin-bottom:12px;">Bloqueios ativos</h3><div id="blocks-list"></div></div></div></section>
+              <section class="tab-panel" data-tab-panel="clientes"><div class="section-head"><div><h2>Clientes</h2><p>Cadastre e gerencie clientes</p></div><button class="btn btn-primary" id="btn-new-client">+ Novo cliente</button></div><div class="table-wrap"><table><thead><tr><th>Nome</th><th>Telefone</th><th>E-mail</th><th>Plano</th><th>Status</th><th></th></tr></thead><tbody id="clients-tbody"></tbody></table></div></section>
+              <section class="tab-panel" data-tab-panel="produtos"><div class="section-head"><div><h2>Produtos</h2><p>Itens à venda na barbearia</p></div><div style="display:flex;gap:10px;align-items:center;"><label class="checkbox-row" style="padding:0;"><input type="checkbox" id="toggle-products"><span style="color:var(--text-muted);font-size:13px;margin-left:6px;">Mostrar para clientes</span></label><button class="btn btn-primary" id="btn-new-product">+ Novo produto</button></div></div><div class="table-wrap"><table><thead><tr><th>Nome</th><th>Preço</th><th>Estoque</th><th>Status</th><th></th></tr></thead><tbody id="products-tbody"></tbody></table></div></section>
+              <section class="tab-panel" data-tab-panel="planos"><div class="section-head"><div><h2>Planos</h2><p>Planos de assinatura oferecidos</p></div><button class="btn btn-primary" id="btn-new-plan">+ Novo plano</button></div><div class="table-wrap"><table><thead><tr><th>Nome</th><th>Preço</th><th>Descrição</th><th>Status</th><th></th></tr></thead><tbody id="plans-tbody"></tbody></table></div></section>
+              <section class="tab-panel" data-tab-panel="config"><div class="section-head"><div><h2>Configurações do sistema</h2><p>Nome do sistema e horário geral</p></div></div><div class="grid grid-2" style="align-items:start;"><div class="card"><div class="field"><label>Nome do sistema</label><input type="text" id="cfg-sysname"></div><div class="field"><label>Intervalo entre horários (min)</label><input type="number" id="cfg-interval" value="30"></div><div class="field"><label>Código da barbearia</label><input type="text" id="cfg-code" disabled></div><button class="btn btn-primary" id="btn-save-general">Salvar</button></div><div class="card"><h3 style="font-size:14px;margin-bottom:14px;">Horário geral de funcionamento</h3><div id="hours-editor"></div><button class="btn btn-primary" id="btn-save-hours" style="margin-top:10px;">Salvar horários</button></div></div></section>
+              <section class="tab-panel" data-tab-panel="exportar"><div class="section-head"><div><h2>Exportar dados</h2><p>Baixe seus dados em CSV</p></div></div><div class="grid grid-4"><div class="card"><h3 style="font-size:14px;margin-bottom:10px;">Usuários</h3><button class="btn btn-outline btn-block" data-export="BD_USERS">Exportar CSV</button></div><div class="card"><h3 style="font-size:14px;margin-bottom:10px;">Clientes</h3><button class="btn btn-outline btn-block" data-export="CLIENT_USER">Exportar CSV</button></div><div class="card"><h3 style="font-size:14px;margin-bottom:10px;">Agendamentos</h3><button class="btn btn-outline btn-block" data-export="APPOINTMENTS">Exportar CSV</button></div><div class="card"><h3 style="font-size:14px;margin-bottom:10px;">Produtos</h3><button class="btn btn-outline btn-block" data-export="PRODUCTS">Exportar CSV</button></div></div></section>
+            </main>
+          </div>
+        </div>
+        <!-- modals do dono -->
+        <div class="modal-overlay" id="modal-emp"><div class="modal modal-wide"><div class="modal-head"><h3 id="emp-modal-title">Novo funcionário</h3><button class="modal-close" onclick="closeModal('modal-emp')">✕</button></div><div class="modal-body"><input type="hidden" id="emp-user-original"><div class="field-row"><div class="field"><label>Nome</label><input type="text" id="emp-name"></div><div class="field"><label>Usuário (login)</label><input type="text" id="emp-user"></div></div><div class="field-row"><div class="field"><label>Senha</label><input type="password" id="emp-pass" placeholder="Deixe em branco para não alterar"></div><div class="field"><label>Telefone</label><input type="tel" id="emp-number"></div></div><div class="field"><label>E-mail</label><input type="email" id="emp-email"></div><h4 style="font-size:13px;color:var(--text-muted);margin:18px 0 10px;text-transform:uppercase;letter-spacing:.5px;">Permissões</h4><div class="grid grid-2"><div class="checkbox-row"><input type="checkbox" id="perm-servicos"><label for="perm-servicos">Gerenciar serviços</label></div><div class="checkbox-row"><input type="checkbox" id="perm-clientes"><label for="perm-clientes">Ver clientes</label></div><div class="checkbox-row"><input type="checkbox" id="perm-bloqueios"><label for="perm-bloqueios">Bloquear própria agenda</label></div><div class="checkbox-row"><input type="checkbox" id="perm-produtos"><label for="perm-produtos">Gerenciar produtos</label></div></div><h4 style="font-size:13px;color:var(--text-muted);margin:18px 0 10px;text-transform:uppercase;letter-spacing:.5px;">Horário de trabalho</h4><div id="emp-hours-editor"></div><div class="checkbox-row" style="margin-top:10px;"><input type="checkbox" id="emp-active" checked><label for="emp-active">Funcionário ativo</label></div></div><div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal('modal-emp')">Cancelar</button><button class="btn btn-primary" id="btn-save-emp">Salvar</button></div></div></div>
+        <div class="modal-overlay" id="modal-service"><div class="modal"><div class="modal-head"><h3 id="service-modal-title">Novo serviço</h3><button class="modal-close" onclick="closeModal('modal-service')">✕</button></div><div class="modal-body"><input type="hidden" id="svc-id"><div class="field"><label>Nome</label><input type="text" id="svc-name"></div><div class="field-row"><div class="field"><label>Preço (R$)</label><input type="number" step="0.01" id="svc-price"></div><div class="field"><label>Duração (min)</label><input type="number" id="svc-duration"></div></div><div class="checkbox-row"><input type="checkbox" id="svc-active" checked><label for="svc-active">Serviço ativo</label></div></div><div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal('modal-service')">Cancelar</button><button class="btn btn-primary" id="btn-save-service">Salvar</button></div></div></div>
+        <div class="modal-overlay" id="modal-client"><div class="modal modal-wide"><div class="modal-head"><h3 id="client-modal-title">Novo cliente</h3><button class="modal-close" onclick="closeModal('modal-client')">✕</button></div><div class="modal-body"><input type="hidden" id="cli-user-original"><div class="field-row"><div class="field"><label>Nome</label><input type="text" id="cli-name"></div><div class="field"><label>Usuário (login)</label><input type="text" id="cli-user"></div></div><div class="field-row"><div class="field"><label>Senha</label><input type="password" id="cli-pass" placeholder="Deixe em branco para não alterar"></div><div class="field"><label>Telefone</label><input type="tel" id="cli-number"></div></div><div class="field"><label>E-mail</label><input type="email" id="cli-email"></div><div class="field-row"><div class="field"><label>Status</label><select id="cli-state"><option value="sem_plano">Sem plano</option><option value="ativo">Ativo</option><option value="pendente">Pendente</option><option value="inativo">Inativo</option></select></div><div class="field"><label>Ativo no sistema</label><select id="cli-active"><option value="true">Sim</option><option value="false">Não</option></select></div></div></div><div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal('modal-client')">Cancelar</button><button class="btn btn-primary" id="btn-save-client">Salvar</button></div></div></div>
+        <div class="modal-overlay" id="modal-product"><div class="modal"><div class="modal-head"><h3 id="product-modal-title">Novo produto</h3><button class="modal-close" onclick="closeModal('modal-product')">✕</button></div><div class="modal-body"><input type="hidden" id="prd-id"><div class="field"><label>Nome</label><input type="text" id="prd-name"></div><div class="field-row"><div class="field"><label>Preço (R$)</label><input type="number" step="0.01" id="prd-price"></div><div class="field"><label>Estoque</label><input type="number" id="prd-stock"></div></div><div class="checkbox-row"><input type="checkbox" id="prd-active" checked><label for="prd-active">Produto ativo</label></div></div><div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal('modal-product')">Cancelar</button><button class="btn btn-primary" id="btn-save-product">Salvar</button></div></div></div>
+        <div class="modal-overlay" id="modal-plan"><div class="modal"><div class="modal-head"><h3 id="plan-modal-title">Novo plano</h3><button class="modal-close" onclick="closeModal('modal-plan')">✕</button></div><div class="modal-body"><input type="hidden" id="pln-id"><div class="field"><label>Nome</label><input type="text" id="pln-name"></div><div class="field"><label>Preço mensal (R$)</label><input type="number" step="0.01" id="pln-price"></div><div class="field"><label>Descrição</label><textarea id="pln-desc" rows="3"></textarea></div><div class="checkbox-row"><input type="checkbox" id="pln-active" checked><label for="pln-active">Plano ativo</label></div></div><div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal('modal-plan')">Cancelar</button><button class="btn btn-primary" id="btn-save-plan">Salvar</button></div></div></div>
+      `;
+      initDono(user);
+    }
+
+    function initDono(user) {
+      let SETTINGS = null;
+      const WEEKDAYS_UI = [["seg","Segunda"],["ter","Terça"],["qua","Quarta"],["qui","Quinta"],["sex","Sexta"],["sab","Sábado"],["dom","Domingo"]];
+      let chartService, chartEmployee;
+
+      const titlesMap = {
+        dashboard: ["Dashboard", "Visão geral do negócio"],
+        agenda: ["Agenda geral", "Todos os agendamentos da barbearia"],
+        funcionarios: ["Funcionários", "Cadastre e gerencie sua equipe"],
+        servicos: ["Serviços", "Tipos de serviço oferecidos"],
+        bloqueios: ["Bloqueios de horário", "Bloqueie datas/horários gerais ou de um funcionário"],
+        clientes: ["Clientes", "Cadastre e gerencie clientes"],
+        produtos: ["Produtos", "Itens à venda na barbearia"],
+        planos: ["Planos", "Planos de assinatura oferecidos"],
+        config: ["Configurações do sistema", "Nome do sistema e horário geral"],
+        exportar: ["Exportar dados", "Baixe seus dados em CSV"],
+      };
+
+      function setPageTitle(tab) {
+        const t = titlesMap[tab];
+        if (t) document.getElementById("page-title").innerHTML = `${t[0]}<span id="page-sub">${t[1]}</span>`;
+      }
+
+      initTabs(tab => {
+        setPageTitle(tab);
+        if (tab === "dashboard") renderDashboard();
+        if (tab === "agenda") renderAgendaGeral();
+        if (tab === "funcionarios") renderEmployees();
+        if (tab === "servicos") renderServices();
+        if (tab === "bloqueios") { populateBlockEmployeeSelect(); renderBlocks(); }
+        if (tab === "clientes") renderClients();
+        if (tab === "produtos") renderProducts();
+        if (tab === "planos") renderPlans();
+        if (tab === "config") renderConfigTab();
+      });
+
+      setupSidebarToggle();
+      document.getElementById("btn-logout").addEventListener("click", logout);
+      document.getElementById("avatar-name").textContent = user.NAME || user.USER;
+      document.getElementById("avatar-initials").textContent = initials(user.NAME || user.USER);
+
+      function renderHoursEditor(containerId, hoursObj) {
+        const container = document.getElementById(containerId);
+        container.innerHTML = WEEKDAYS_UI.map(([k,label]) => {
+          const h = hoursObj?.[k];
+          return `<div class="field-row" style="align-items:center;margin-bottom:8px;">
+            <div class="checkbox-row" style="flex:0 0 120px;padding:0;"><input type="checkbox" class="hd-enabled" data-day="${k}" ${h?"checked":""}><label style="margin:0 0 0 6px;">${label}</label></div>
+            <div class="field" style="margin:0;"><input type="time" class="hd-start" data-day="${k}" value="${h?.start||"09:00"}"></div>
+            <div class="field" style="margin:0;"><input type="time" class="hd-end" data-day="${k}" value="${h?.end||"19:00"}"></div>
+          </div>`;
+        }).join("");
+      }
+      function collectHoursEditor(containerId) {
+        const container = document.getElementById(containerId);
+        const result = {};
+        container.querySelectorAll(".hd-enabled").forEach(cb => {
+          const day = cb.dataset.day;
+          if (cb.checked) {
+            const start = container.querySelector(`.hd-start[data-day="${day}"]`).value;
+            const end = container.querySelector(`.hd-end[data-day="${day}"]`).value;
+            result[day] = { start, end };
+          }
+        });
+        return result;
+      }
+
+      async function loadSettings() {
+        const rows = await db.select("SETTINGS", `?select=*&SYSTEM=eq.${pgEsc(user.SYSTEM)}&limit=1`);
+        if (rows && rows[0]) SETTINGS = rows[0];
+        else {
+          SETTINGS = { SYSTEM: user.SYSTEM, SYSTEM_NAME: "BarberOS", SHOW_PRODUCTS: false, BUSINESS_HOURS: { interval: 30 } };
+          await db.insert("SETTINGS", SETTINGS);
+        }
+        document.getElementById("sys-name").textContent = SETTINGS.SYSTEM_NAME || "BarberOS";
+        document.getElementById("toggle-products").checked = !!SETTINGS.SHOW_PRODUCTS;
+      }
+
+      // Dashboard
+      async function renderDashboard() {
+        const todayISO = toISODate(new Date());
+        const monthPrefix = todayISO.slice(0,7);
+        const [appts, services, employees, clients] = await Promise.all([
+          db.select("APPOINTMENTS", `?select=*&SYSTEM=eq.${pgEsc(user.SYSTEM)}&DATE=gte.${monthPrefix}-01`),
+          db.select("SERVICES", `?select=*&SYSTEM=eq.${pgEsc(user.SYSTEM)}`),
+          db.select("BD_USERS", `?select=USER,NAME&SYSTEM=eq.${pgEsc(user.SYSTEM)}&LEVEL=eq.00`),
+          db.select("CLIENT_USER", `?select=STATE&SYSTEM=eq.${pgEsc(user.SYSTEM)}`),
+        ]);
+        const concluded = (appts||[]).filter(a => a.STATUS === "concluido");
+        const revenue = concluded.reduce((sum,a) => {
+          const s = (services||[]).find(sv => sv.ID === a.SERVICE_ID);
+          return sum + (s ? Number(s.PRICE) : 0);
+        }, 0);
+        document.getElementById("kpi-revenue").textContent = money(revenue);
+        document.getElementById("kpi-revenue-sub").textContent = `${concluded.length} atendimentos concluídos no mês`;
+        const todayCount = (appts||[]).filter(a => a.DATE === todayISO && a.STATUS !== "cancelado").length;
+        document.getElementById("kpi-today").textContent = todayCount;
+        const activeClients = (clients||[]).filter(c => c.STATE === "ativo").length;
+        document.getElementById("kpi-clients").textContent = activeClients;
+        document.getElementById("kpi-clients-sub").textContent = `${(clients||[]).length} clientes no total`;
+        const ticket = concluded.length ? revenue / concluded.length : 0;
+        document.getElementById("kpi-ticket").textContent = money(ticket);
+
+        const byService = {};
+        concluded.forEach(a => { const s = (services||[]).find(sv => sv.ID === a.SERVICE_ID); const name = s? s.NAME : "Outro"; byService[name] = (byService[name]||0) + (s? Number(s.PRICE) : 0); });
+        const svcLabels = Object.keys(byService); const svcData = Object.values(byService);
+        const byEmp = {};
+        (appts||[]).filter(a => a.STATUS !== "cancelado").forEach(a => { const e = (employees||[]).find(em => em.USER === a.EMPLOYEE_USER); const name = e ? e.NAME : (a.EMPLOYEE_USER||"Sem funcionário"); byEmp[name] = (byEmp[name]||0) + 1; });
+        const empLabels = Object.keys(byEmp); const empData = Object.values(byEmp);
+        const chartOpts = {
+          plugins: { legend: { display: false } },
+          scales: { x: { ticks: { color: "#A79E8F" }, grid: { color: "#332D24" } }, y: { ticks: { color: "#A79E8F" }, grid: { color: "#332D24" }, beginAtZero: true } }
+        };
+        if (chartService) chartService.destroy();
+        chartService = new Chart(document.getElementById("chart-service"), { type:"bar", data:{ labels: svcLabels.length?svcLabels:["Sem dados"], datasets:[{ data: svcData.length?svcData:[0], backgroundColor:"#C99B4A", borderRadius:6 }] }, options:chartOpts });
+        if (chartEmployee) chartEmployee.destroy();
+        chartEmployee = new Chart(document.getElementById("chart-employee"), { type:"bar", data:{ labels: empLabels.length?empLabels:["Sem dados"], datasets:[{ data: empData.length?empData:[0], backgroundColor:"#5C8A70", borderRadius:6 }] }, options:chartOpts });
+      }
+
+      async function renderAgendaGeral() {
+        const tbody = document.getElementById("agenda-geral-tbody");
+        tbody.innerHTML = `<tr><td colspan="6" class="table-empty">Carregando...</td></tr>`;
+        const dateFilter = document.getElementById("agenda-date-filter").value;
+        let query = `?select=*&SYSTEM=eq.${pgEsc(user.SYSTEM)}&order=DATE.desc,TIME.desc&limit=200`;
+        if (dateFilter) query += `&DATE=eq.${dateFilter}`;
+        const [rows, services, employees, clients] = await Promise.all([
+          db.select("APPOINTMENTS", query),
+          db.select("SERVICES", `?select=*&SYSTEM=eq.${pgEsc(user.SYSTEM)}`),
+          db.select("BD_USERS", `?select=USER,NAME&SYSTEM=eq.${pgEsc(user.SYSTEM)}&LEVEL=eq.00`),
+          db.select("BD_USERS", `?select=USER,NAME&SYSTEM=eq.${pgEsc(user.SYSTEM)}&LEVEL=eq.0`),
+        ]);
+        if (!rows || rows.length === 0) { tbody.innerHTML = `<tr><td colspan="6" class="table-empty">Nenhum agendamento.</td></tr>`; return; }
+        tbody.innerHTML = rows.map(a => {
+          const s = (services||[]).find(sv => sv.ID === a.SERVICE_ID);
+          const e = (employees||[]).find(em => em.USER === a.EMPLOYEE_USER);
+          const c = (clients||[]).find(cl => cl.USER === a.CLIENT_USER);
+          const badge = { agendado: '<span class="badge badge-gold">Agendado</span>', concluido: '<span class="badge badge-green">Concluído</span>', cancelado: '<span class="badge badge-red">Cancelado</span>' }[a.STATUS] || "";
+          const [y,m,d] = a.DATE.split("-");
+          return `<tr><td>${d}/${m}/${y}</td><td>${a.TIME}</td><td><strong>${escapeHtml(c?.NAME || a.CLIENT_USER)}</strong></td><td>${escapeHtml(e?.NAME || "Sem preferência")}</td><td>${escapeHtml(s?.NAME || "-")}</td><td>${badge}</td></tr>`;
+        }).join("");
+      }
+      document.getElementById("agenda-date-filter").addEventListener("change", renderAgendaGeral);
+
+      // Employees CRUD
+      async function renderEmployees() {
+        const tbody = document.getElementById("emp-tbody");
+        tbody.innerHTML = `<tr><td colspan="5" class="table-empty">Carregando...</td></tr>`;
+        const rows = (await db.select("BD_USERS", `?select=*&SYSTEM=eq.${pgEsc(user.SYSTEM)}&LEVEL=eq.00&order=NAME.asc`)) || [];
+        if (rows.length === 0) { tbody.innerHTML = `<tr><td colspan="5" class="table-empty">Nenhum funcionário cadastrado.</td></tr>`; return; }
+        tbody.innerHTML = rows.map(e => `<tr><td><strong>${escapeHtml(e.NAME)}</strong></td><td>${escapeHtml(e.USER)}</td><td>${escapeHtml(e.NUMBER||"-")}</td><td>${e.ACTIVE===false?'<span class="badge badge-red">Inativo</span>':'<span class="badge badge-green">Ativo</span>'}</td><td><button class="btn btn-ghost btn-sm" data-edit-emp="${escapeHtml(e.USER)}">Editar</button></td></tr>`).join("");
+        tbody.querySelectorAll("[data-edit-emp]").forEach(btn => btn.addEventListener("click", () => { const emp = rows.find(r => r.USER === btn.dataset.editEmp); openEmpModal(emp); }));
+      }
+      document.getElementById("btn-new-emp").addEventListener("click", () => openEmpModal());
+      document.getElementById("btn-save-emp").addEventListener("click", async () => {
+        const original = document.getElementById("emp-user-original").value;
+        const username = document.getElementById("emp-user").value.trim();
+        const pass = document.getElementById("emp-pass").value;
+        const name = document.getElementById("emp-name").value.trim();
+        if (!username || !name) { toast("Preencha nome e usuário.", "error"); return; }
+        const permissions = { servicos: document.getElementById("perm-servicos").checked, clientes: document.getElementById("perm-clientes").checked, bloqueios: document.getElementById("perm-bloqueios").checked, produtos: document.getElementById("perm-produtos").checked };
+        const workHours = collectHoursEditor("emp-hours-editor");
+        const payload = { NAME: name, USER: username, NUMBER: document.getElementById("emp-number").value.trim(), EMAIL: document.getElementById("emp-email").value.trim(), PERMISSIONS: permissions, WORK_HOURS: workHours, ACTIVE: document.getElementById("emp-active").checked };
+        try {
+          if (!original) {
+            const existing = await db.select("BD_USERS", `?select=USER&USER=eq.${pgEsc(username)}&limit=1`);
+            if (existing && existing.length > 0) { toast("Esse usuário já existe.", "error"); return; }
+            if (!pass) { toast("Defina uma senha.", "error"); return; }
+            payload.PASSWORD = await hashPassword(pass);
+            payload.SYSTEM = user.SYSTEM; payload.LEVEL = "00";
+            await db.insert("BD_USERS", payload);
+          } else {
+            if (pass) payload.PASSWORD = await hashPassword(pass);
+            await db.update("BD_USERS", `?USER=eq.${pgEsc(original)}`, payload);
+          }
+          toast("Funcionário salvo!", "success"); closeModal("modal-emp"); renderEmployees();
+        } catch (e) { console.error(e); toast("Erro ao salvar funcionário.", "error"); }
+      });
+      function openEmpModal(emp) {
+        document.getElementById("emp-modal-title").textContent = emp ? "Editar funcionário" : "Novo funcionário";
+        document.getElementById("emp-user-original").value = emp?.USER || "";
+        document.getElementById("emp-name").value = emp?.NAME || "";
+        document.getElementById("emp-user").value = emp?.USER || "";
+        document.getElementById("emp-pass").value = "";
+        document.getElementById("emp-number").value = emp?.NUMBER || "";
+        document.getElementById("emp-email").value = emp?.EMAIL || "";
+        document.getElementById("emp-active").checked = emp ? emp.ACTIVE !== false : true;
+        const perms = emp?.PERMISSIONS || {};
+        document.getElementById("perm-servicos").checked = !!perms.servicos;
+        document.getElementById("perm-clientes").checked = !!perms.clientes;
+        document.getElementById("perm-bloqueios").checked = !!perms.bloqueios;
+        document.getElementById("perm-produtos").checked = !!perms.produtos;
+        renderHoursEditor("emp-hours-editor", emp?.WORK_HOURS || {});
+        openModal("modal-emp");
+      }
+
+      // Services
+      async function renderServices() {
+        const tbody = document.getElementById("services-tbody");
+        tbody.innerHTML = `<tr><td colspan="5" class="table-empty">Carregando...</td></tr>`;
+        const rows = (await db.select("SERVICES", `?select=*&SYSTEM=eq.${pgEsc(user.SYSTEM)}&order=NAME.asc`)) || [];
+        if (rows.length === 0) { tbody.innerHTML = `<tr><td colspan="5" class="table-empty">Nenhum serviço.</td></tr>`; return; }
+        tbody.innerHTML = rows.map(s => `<tr><td><strong>${escapeHtml(s.NAME)}</strong></td><td>${money(s.PRICE)}</td><td>${s.DURATION_MIN} min</td><td>${s.ACTIVE?'<span class="badge badge-green">Ativo</span>':'<span class="badge badge-muted">Inativo</span>'}</td><td><button class="btn btn-ghost btn-sm" data-edit-svc="${s.ID}">Editar</button></td></tr>`).join("");
+        tbody.querySelectorAll("[data-edit-svc]").forEach(btn => btn.addEventListener("click", () => { const svc = rows.find(r => String(r.ID) === btn.dataset.editSvc); openServiceModal(svc); }));
+      }
+      document.getElementById("btn-new-service").addEventListener("click", () => openServiceModal());
+      document.getElementById("btn-save-service").addEventListener("click", async () => {
+        const id = document.getElementById("svc-id").value;
+        const payload = { NAME: document.getElementById("svc-name").value.trim(), PRICE: Number(document.getElementById("svc-price").value||0), DURATION_MIN: Number(document.getElementById("svc-duration").value||0), ACTIVE: document.getElementById("svc-active").checked };
+        try {
+          if (id) await db.update("SERVICES", `?ID=eq.${id}`, payload);
+          else await db.insert("SERVICES", { ...payload, SYSTEM: user.SYSTEM });
+          toast("Serviço salvo!", "success"); closeModal("modal-service"); renderServices();
+        } catch (e) { toast("Erro ao salvar serviço.", "error"); }
+      });
+      function openServiceModal(svc) {
+        document.getElementById("service-modal-title").textContent = svc ? "Editar serviço" : "Novo serviço";
+        document.getElementById("svc-id").value = svc?.ID || "";
+        document.getElementById("svc-name").value = svc?.NAME || "";
+        document.getElementById("svc-price").value = svc?.PRICE || "";
+        document.getElementById("svc-duration").value = svc?.DURATION_MIN || "";
+        document.getElementById("svc-active").checked = svc ? !!svc.ACTIVE : true;
+        openModal("modal-service");
+      }
+
+      // Blocks
+      async function populateBlockEmployeeSelect() {
+        const rows = (await db.select("BD_USERS", `?select=USER,NAME&SYSTEM=eq.${pgEsc(user.SYSTEM)}&LEVEL=eq.00&ACTIVE=eq.true&order=NAME.asc`)) || [];
+        const sel = document.getElementById("blk-employee");
+        sel.innerHTML = '<option value="">Toda a barbearia (geral)</option>' + rows.map(r => `<option value="${r.USER}">${escapeHtml(r.NAME)}</option>`).join("");
+      }
+      async function renderBlocks() {
+        const listEl = document.getElementById("blocks-list");
+        listEl.innerHTML = `<p class="help-text">Carregando...</p>`;
+        const rows = (await db.select("BLOCKED_SLOTS", `?select=*&SYSTEM=eq.${pgEsc(user.SYSTEM)}&order=DATE.asc`)) || [];
+        if (rows.length === 0) { listEl.innerHTML = `<p class="help-text">Nenhum bloqueio ativo.</p>`; return; }
+        const employees = (await db.select("BD_USERS", `?select=USER,NAME&SYSTEM=eq.${pgEsc(user.SYSTEM)}&LEVEL=eq.00`)) || [];
+        listEl.innerHTML = "";
+        rows.forEach(b => {
+          const empName = b.EMPLOYEE_USER ? (employees.find(e => e.USER === b.EMPLOYEE_USER)?.NAME || b.EMPLOYEE_USER) : "Geral";
+          const div = document.createElement("div");
+          div.className = "appt-card"; div.style.marginBottom = "8px";
+          div.innerHTML = `<div class="appt-info"><div class="service">${new Date(b.DATE+"T00:00").toLocaleDateString("pt-BR")} · ${escapeHtml(empName)}</div><div class="meta">${b.TIME_START} - ${b.TIME_END} ${b.REASON?"· "+escapeHtml(b.REASON):""}</div></div><div class="appt-actions"><button class="btn btn-danger btn-sm" data-del-block="${b.ID}">Liberar</button></div>`;
+          listEl.appendChild(div);
+        });
+        listEl.querySelectorAll("[data-del-block]").forEach(btn => {
+          btn.addEventListener("click", async () => {
+            await db.remove("BLOCKED_SLOTS", `?ID=eq.${btn.dataset.delBlock}`);
+            toast("Bloqueio removido.", "success");
+            renderBlocks();
+          });
+        });
+      }
+      document.getElementById("btn-add-block").addEventListener("click", async () => {
+        const employee = document.getElementById("blk-employee").value || null;
+        const date = document.getElementById("blk-date").value;
+        const start = document.getElementById("blk-start").value;
+        const end = document.getElementById("blk-end").value;
+        const reason = document.getElementById("blk-reason").value.trim();
+        if (!date || !start || !end) { toast("Preencha data e horário.", "error"); return; }
+        try {
+          await db.insert("BLOCKED_SLOTS", { SYSTEM: user.SYSTEM, EMPLOYEE_USER: employee, DATE: date, TIME_START: start, TIME_END: end, REASON: reason||null });
+          let query = `?select=*&SYSTEM=eq.${pgEsc(user.SYSTEM)}&DATE=eq.${date}&STATUS=eq.agendado`;
+          if (employee) query += `&EMPLOYEE_USER=eq.${pgEsc(employee)}`;
+          const appts = (await db.select("APPOINTMENTS", query)) || [];
+          const affected = appts.filter(a => a.TIME >= start && a.TIME < end);
+          for (const a of affected) {
+            await db.update("APPOINTMENTS", `?ID=eq.${a.ID}`, { STATUS: "cancelado" });
+            await notifyUser(a.CLIENT_USER, user.SYSTEM, `Seu agendamento de ${a.DATE.split("-").reverse().join("/")} às ${a.TIME} foi cancelado devido a um bloqueio.`);
+            if (a.EMPLOYEE_USER) await notifyUser(a.EMPLOYEE_USER, user.SYSTEM, `Agendamento de ${a.DATE.split("-").reverse().join("/")} às ${a.TIME} cancelado.`);
+          }
+          toast(`Horário bloqueado.${affected.length?` ${affected.length} agendamento(s) cancelado(s).`:""}`, "success");
+          document.getElementById("blk-date").value = ""; document.getElementById("blk-start").value = ""; document.getElementById("blk-end").value = ""; document.getElementById("blk-reason").value = "";
+          renderBlocks();
+        } catch (e) { console.error(e); toast("Erro ao bloquear.", "error"); }
+      });
+
+      // Clients
+      async function renderClients() {
+        const tbody = document.getElementById("clients-tbody");
+        tbody.innerHTML = `<tr><td colspan="6" class="table-empty">Carregando...</td></tr>`;
+        const rows = (await db.select("CLIENT_USER", `?select=*&SYSTEM=eq.${pgEsc(user.SYSTEM)}&order=NAME.asc`)) || [];
+        if (rows.length === 0) { tbody.innerHTML = `<tr><td colspan="6" class="table-empty">Nenhum cliente.</td></tr>`; return; }
+        tbody.innerHTML = rows.map(c => `<tr><td><strong>${escapeHtml(c.NAME)}</strong></td><td>${escapeHtml(c.NUMBER||"-")}</td><td>${escapeHtml(c.EMAIL||"-")}</td><td>${escapeHtml(c.PLAN||"-")}</td><td>${badgeForState(c.STATE)}</td><td><button class="btn btn-ghost btn-sm" data-edit-cli="${escapeHtml(c.USER)}">Editar</button></td></tr>`).join("");
+        tbody.querySelectorAll("[data-edit-cli]").forEach(btn => btn.addEventListener("click", () => { const cli = rows.find(r => r.USER === btn.dataset.editCli); openClientModal(cli); }));
+      }
+      document.getElementById("btn-new-client").addEventListener("click", () => openClientModal());
+      document.getElementById("btn-save-client").addEventListener("click", async () => {
+        const original = document.getElementById("cli-user-original").value;
+        const username = document.getElementById("cli-user").value.trim();
+        const pass = document.getElementById("cli-pass").value;
+        const name = document.getElementById("cli-name").value.trim();
+        if (!username || !name) { toast("Preencha nome e usuário.", "error"); return; }
+        const bdPayload = { NAME: name, USER: username, NUMBER: document.getElementById("cli-number").value.trim(), EMAIL: document.getElementById("cli-email").value.trim(), ACTIVE: document.getElementById("cli-active").value === "true" };
+        const clientPayload = { NAME: name, USER: username, NUMBER: bdPayload.NUMBER, EMAIL: bdPayload.EMAIL, STATE: document.getElementById("cli-state").value };
+        try {
+          if (!original) {
+            const existing = await db.select("BD_USERS", `?select=USER&USER=eq.${pgEsc(username)}&limit=1`);
+            if (existing && existing.length > 0) { toast("Usuário já existe.", "error"); return; }
+            if (!pass) { toast("Defina uma senha.", "error"); return; }
+            bdPayload.PASSWORD = await hashPassword(pass); bdPayload.SYSTEM = user.SYSTEM; bdPayload.LEVEL = "0";
+            clientPayload.SYSTEM = user.SYSTEM; clientPayload.VALUE = 0;
+            await db.insert("BD_USERS", bdPayload);
+            await db.insert("CLIENT_USER", clientPayload);
+          } else {
+            if (pass) bdPayload.PASSWORD = await hashPassword(pass);
+            await db.update("BD_USERS", `?USER=eq.${pgEsc(original)}`, bdPayload);
+            await db.update("CLIENT_USER", `?USER=eq.${pgEsc(original)}`, clientPayload);
+          }
+          toast("Cliente salvo!", "success"); closeModal("modal-client"); renderClients();
+        } catch (e) { console.error(e); toast("Erro ao salvar cliente.", "error"); }
+      });
+      async function openClientModal(cli) {
+        document.getElementById("client-modal-title").textContent = cli ? "Editar cliente" : "Novo cliente";
+        document.getElementById("cli-user-original").value = cli?.USER || "";
+        document.getElementById("cli-name").value = cli?.NAME || "";
+        document.getElementById("cli-user").value = cli?.USER || "";
+        document.getElementById("cli-pass").value = "";
+        document.getElementById("cli-number").value = cli?.NUMBER || "";
+        document.getElementById("cli-email").value = cli?.EMAIL || "";
+        document.getElementById("cli-state").value = cli?.STATE || "sem_plano";
+        let activeVal = true;
+        if (cli) {
+          const bd = await db.select("BD_USERS", `?select=ACTIVE&USER=eq.${pgEsc(cli.USER)}&limit=1`);
+          activeVal = bd && bd[0] ? bd[0].ACTIVE !== false : true;
+        }
+        document.getElementById("cli-active").value = String(activeVal);
+        openModal("modal-client");
+      }
+      function badgeForState(state) {
+        if (state === "ativo") return '<span class="badge badge-green">Ativo</span>';
+        if (state === "pendente") return '<span class="badge badge-gold">Pendente</span>';
+        if (state === "inativo") return '<span class="badge badge-red">Inativo</span>';
+        return '<span class="badge badge-muted">Sem plano</span>';
+      }
+
+      // Products
+      async function renderProducts() {
+        const tbody = document.getElementById("products-tbody");
+        tbody.innerHTML = `<tr><td colspan="5" class="table-empty">Carregando...</td></tr>`;
+        const rows = (await db.select("PRODUCTS", `?select=*&SYSTEM=eq.${pgEsc(user.SYSTEM)}&order=NAME.asc`)) || [];
+        if (rows.length === 0) { tbody.innerHTML = `<tr><td colspan="5" class="table-empty">Nenhum produto.</td></tr>`; return; }
+        tbody.innerHTML = rows.map(p => `<tr><td><strong>${escapeHtml(p.NAME)}</strong></td><td>${money(p.PRICE)}</td><td>${p.STOCK}</td><td>${p.ACTIVE?'<span class="badge badge-green">Ativo</span>':'<span class="badge badge-muted">Inativo</span>'}</td><td><button class="btn btn-ghost btn-sm" data-edit-prd="${p.ID}">Editar</button></td></tr>`).join("");
+        tbody.querySelectorAll("[data-edit-prd]").forEach(btn => btn.addEventListener("click", () => { const p = rows.find(r => String(r.ID) === btn.dataset.editPrd); openProductModal(p); }));
+      }
+      document.getElementById("btn-new-product").addEventListener("click", () => openProductModal());
+      document.getElementById("btn-save-product").addEventListener("click", async () => {
+        const id = document.getElementById("prd-id").value;
+        const payload = { NAME: document.getElementById("prd-name").value.trim(), PRICE: Number(document.getElementById("prd-price").value||0), STOCK: Number(document.getElementById("prd-stock").value||0), ACTIVE: document.getElementById("prd-active").checked };
+        try {
+          if (id) await db.update("PRODUCTS", `?ID=eq.${id}`, payload);
+          else await db.insert("PRODUCTS", { ...payload, SYSTEM: user.SYSTEM });
+          toast("Produto salvo!", "success"); closeModal("modal-product"); renderProducts();
+        } catch (e) { toast("Erro ao salvar produto.", "error"); }
+      });
+      function openProductModal(p) {
+        document.getElementById("product-modal-title").textContent = p ? "Editar produto" : "Novo produto";
+        document.getElementById("prd-id").value = p?.ID || "";
+        document.getElementById("prd-name").value = p?.NAME || "";
+        document.getElementById("prd-price").value = p?.PRICE || "";
+        document.getElementById("prd-stock").value = p?.STOCK || 0;
+        document.getElementById("prd-active").checked = p ? !!p.ACTIVE : true;
+        openModal("modal-product");
+      }
+
+      // Plans
+      async function renderPlans() {
+        const tbody = document.getElementById("plans-tbody");
+        tbody.innerHTML = `<tr><td colspan="5" class="table-empty">Carregando...</td></tr>`;
+        const rows = (await db.select("PLANS", `?select=*&SYSTEM=eq.${pgEsc(user.SYSTEM)}&order=PRICE.asc`)) || [];
+        if (rows.length === 0) { tbody.innerHTML = `<tr><td colspan="5" class="table-empty">Nenhum plano.</td></tr>`; return; }
+        tbody.innerHTML = rows.map(p => `<tr><td><strong>${escapeHtml(p.NAME)}</strong></td><td>${money(p.PRICE)}</td><td>${escapeHtml(p.DESCRIPTION||"-")}</td><td>${p.ACTIVE?'<span class="badge badge-green">Ativo</span>':'<span class="badge badge-muted">Inativo</span>'}</td><td><button class="btn btn-ghost btn-sm" data-edit-pln="${p.ID}">Editar</button></td></tr>`).join("");
+        tbody.querySelectorAll("[data-edit-pln]").forEach(btn => btn.addEventListener("click", () => { const p = rows.find(r => String(r.ID) === btn.dataset.editPln); openPlanModal(p); }));
+      }
+      document.getElementById("btn-new-plan").addEventListener("click", () => openPlanModal());
+      document.getElementById("btn-save-plan").addEventListener("click", async () => {
+        const id = document.getElementById("pln-id").value;
+        const payload = { NAME: document.getElementById("pln-name").value.trim(), PRICE: Number(document.getElementById("pln-price").value||0), DESCRIPTION: document.getElementById("pln-desc").value.trim(), ACTIVE: document.getElementById("pln-active").checked };
+        try {
+          if (id) await db.update("PLANS", `?ID=eq.${id}`, payload);
+          else await db.insert("PLANS", { ...payload, SYSTEM: user.SYSTEM });
+          toast("Plano salvo!", "success"); closeModal("modal-plan"); renderPlans();
+        } catch (e) { toast("Erro ao salvar plano.", "error"); }
+      });
+      function openPlanModal(p) {
+        document.getElementById("plan-modal-title").textContent = p ? "Editar plano" : "Novo plano";
+        document.getElementById("pln-id").value = p?.ID || "";
+        document.getElementById("pln-name").value = p?.NAME || "";
+        document.getElementById("pln-price").value = p?.PRICE || "";
+        document.getElementById("pln-desc").value = p?.DESCRIPTION || "";
+        document.getElementById("pln-active").checked = p ? !!p.ACTIVE : true;
+        openModal("modal-plan");
+      }
+
+      // Config
+      function renderConfigTab() {
+        document.getElementById("cfg-sysname").value = SETTINGS.SYSTEM_NAME || "";
+        document.getElementById("cfg-interval").value = (SETTINGS.BUSINESS_HOURS && SETTINGS.BUSINESS_HOURS.interval) || 30;
+        document.getElementById("cfg-code").value = user.SYSTEM;
+        renderHoursEditor("hours-editor", SETTINGS.BUSINESS_HOURS || {});
+      }
+      document.getElementById("btn-save-general").addEventListener("click", async () => {
+        const name = document.getElementById("cfg-sysname").value.trim();
+        const interval = Number(document.getElementById("cfg-interval").value || 30);
+        try {
+          const bh = { ...(SETTINGS.BUSINESS_HOURS || {}), interval };
+          await db.update("SETTINGS", `?SYSTEM=eq.${pgEsc(user.SYSTEM)}`, { SYSTEM_NAME: name, BUSINESS_HOURS: bh });
+          SETTINGS.SYSTEM_NAME = name; SETTINGS.BUSINESS_HOURS = bh;
+          document.getElementById("sys-name").textContent = name;
+          toast("Configurações salvas!", "success");
+        } catch (e) { toast("Erro ao salvar.", "error"); }
+      });
+      document.getElementById("btn-save-hours").addEventListener("click", async () => {
+        try {
+          const hours = collectHoursEditor("hours-editor");
+          hours.interval = (SETTINGS.BUSINESS_HOURS && SETTINGS.BUSINESS_HOURS.interval) || 30;
+          await db.update("SETTINGS", `?SYSTEM=eq.${pgEsc(user.SYSTEM)}`, { BUSINESS_HOURS: hours });
+          SETTINGS.BUSINESS_HOURS = hours;
+          toast("Horário de funcionamento salvo!", "success");
+        } catch (e) { toast("Erro ao salvar horários.", "error"); }
+      });
+      document.getElementById("toggle-products").addEventListener("change", async () => {
+        const val = document.getElementById("toggle-products").checked;
+        try {
+          await db.update("SETTINGS", `?SYSTEM=eq.${pgEsc(user.SYSTEM)}`, { SHOW_PRODUCTS: val });
+          SETTINGS.SHOW_PRODUCTS = val;
+          toast(val ? "Produtos visíveis para clientes." : "Produtos ocultos.", "success");
+        } catch (e) { toast("Erro ao atualizar.", "error"); }
+      });
+
+      // Export CSV
+      document.querySelectorAll("[data-export]").forEach(btn => btn.addEventListener("click", () => exportTable(btn.dataset.export)));
+      async function exportTable(table) {
+        try {
+          const rows = (await db.select(table, `?select=*&SYSTEM=eq.${pgEsc(user.SYSTEM)}`)) || [];
+          if (rows.length === 0) { toast("Nenhum dado para exportar.", "error"); return; }
+          const cleaned = rows.map(r => { const { PASSWORD, CARD, CODE, ...rest } = r; return rest; });
+          const csv = jsonToCsv(cleaned);
+          downloadCsv(`${table}_${toISODate(new Date())}.csv`, csv);
+          toast("Exportação concluída!", "success");
+        } catch (e) { console.error(e); toast("Erro ao exportar.", "error"); }
+      }
+      function jsonToCsv(rows) {
+        const headers = Object.keys(rows[0]);
+        const lines = [headers.join(";")];
+        rows.forEach(r => lines.push(headers.map(h => { let val = r[h]; if (val === null || val === undefined) val = ""; if (typeof val === "object") val = JSON.stringify(val); return `"${String(val).replace(/"/g, '""')}"`; }).join(";")));
+        return lines.join("\n");
+      }
+      function downloadCsv(filename, csv) {
+        const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8;" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a"); a.href = url; a.download = filename; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+      }
+
+      (async () => {
+        await loadSettings();
+        await initNotifications(user);
+        renderDashboard();
+      })();
+    }
+
+    // ======================== APP START ========================
     (function() {
       const session = getSession();
-      if (session) showPanel(session.LEVEL);
-      else showLoginView();
+      if (session) {
+        showPanel(session.LEVEL);
+      } else {
+        showLoginView();
+      }
     })();
   </script>
 </body>
