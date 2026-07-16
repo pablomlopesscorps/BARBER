@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BarberOS · Sistema de Barbearia</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="login-shell">
+  <div class="login-box">
+    <div class="login-logo">✂ BarberOS</div>
+    <div class="login-tag">Gestão de barbearia</div>
+    <div class="stripe-bar" style="margin-bottom:22px;"></div>
+
+    <!-- ===================== LOGIN ===================== -->
+    <div id="view-login">
+      <div class="login-error" id="login-error"></div>
+      <form id="form-login">
+        <div class="field">
+          <label>Usuário</label>
+          <input type="text" id="login-user" placeholder="seu.usuario" required autocomplete="username">
+        </div>
+        <div class="field">
+          <label>Senha</label>
+          <input type="password" id="login-pass" placeholder="••••••••" required autocomplete="current-password">
+        </div>
+        <button type="submit" class="btn btn-primary btn-block" id="btn-login">
+          <span id="login-btn-text">Entrar</span>
+        </button>
+      </form>
+      <div class="login-switch">
+        Ainda não tem conta? <a href="#" id="go-signup">Cadastre-se como cliente</a>
+      </div>
+    </div>
+
+    <!-- ===================== CADASTRO (só cliente) ===================== -->
+    <div id="view-signup" class="hidden">
+      <div class="login-error" id="signup-error"></div>
+      <form id="form-signup">
+        <div class="field">
+          <label>Código da barbearia</label>
+          <input type="text" id="su-system" placeholder="ex: barbearia-central" required>
+          <p class="help-text">Peça esse código ao dono da barbearia onde você quer agendar.</p>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label>Nome completo</label>
+            <input type="text" id="su-name" required>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label>Usuário</label>
+            <input type="text" id="su-user" required>
+          </div>
+          <div class="field">
+            <label>Senha</label>
+            <input type="password" id="su-pass" required>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label>E-mail</label>
+            <input type="email" id="su-email" required>
+          </div>
+          <div class="field">
+            <label>Telefone</label>
+            <input type="tel" id="su-number" placeholder="(00) 00000-0000" required>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block" id="btn-signup">
+          <span id="signup-btn-text">Criar conta</span>
+        </button>
+      </form>
+      <div class="login-switch">
+        Já tem conta? <a href="#" id="go-login">Entrar</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="toast-root"></div>
+
+<script src="js/supabase.js"></script>
+<script src="js/common.js"></script>
+<script>
+  // Se já está logado, redireciona direto
+  (function () {
+    const u = getSession();
+    if (u) redirectByLevel(u.LEVEL);
+  })();
+
+  function redirectByLevel(level) {
+    if (level === "000") window.location.href = "dono.html";
+    else if (level === "00") window.location.href = "funcionario.html";
+    else window.location.href = "cliente.html";
+  }
+
+  document.getElementById("go-signup").addEventListener("click", (e) => {
+    e.preventDefault();
+    document.getElementById("view-login").classList.add("hidden");
+    document.getElementById("view-signup").classList.remove("hidden");
+  });
+  document.getElementById("go-login").addEventListener("click", (e) => {
+    e.preventDefault();
+    document.getElementById("view-signup").classList.add("hidden");
+    document.getElementById("view-login").classList.remove("hidden");
+  });
+
+  document.getElementById("form-login").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const errBox = document.getElementById("login-error");
+    errBox.classList.remove("show");
+    const user = document.getElementById("login-user").value.trim();
+    const pass = document.getElementById("login-pass").value;
+    const btn = document.getElementById("btn-login");
+    btn.disabled = true;
+    document.getElementById("login-btn-text").innerHTML = '<span class="loader"></span>';
+
+    try {
+      const hash = await hashPassword(pass);
+      const rows = await db.select(
+        "BD_USERS",
+        `?select=*&USER=eq.${pgEsc(user)}&PASSWORD=eq.${pgEsc(hash)}&limit=1`
+      );
+      if (!rows || rows.length === 0) {
+        throw new Error("Usuário ou senha incorretos.");
+      }
+      const found = rows[0];
+      if (found.ACTIVE === false) {
+        throw new Error("Este usuário está desativado. Fale com o responsável.");
+      }
+      saveSession({
+        USER: found.USER,
+        NAME: found.NAME,
+        EMAIL: found.EMAIL,
+        NUMBER: found.NUMBER,
+        LEVEL: found.LEVEL,
+        SYSTEM: found.SYSTEM,
+        PERMISSIONS: found.PERMISSIONS || {},
+      });
+      toast(`Bem-vindo, ${found.NAME || found.USER}!`, "success");
+      setTimeout(() => redirectByLevel(found.LEVEL), 400);
+    } catch (err) {
+      errBox.textContent = err.message;
+      errBox.classList.add("show");
+    } finally {
+      btn.disabled = false;
+      document.getElementById("login-btn-text").textContent = "Entrar";
+    }
+  });
+
+  document.getElementById("form-signup").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const errBox = document.getElementById("signup-error");
+    errBox.classList.remove("show");
+    const system = document.getElementById("su-system").value.trim();
+    const name = document.getElementById("su-name").value.trim();
+    const user = document.getElementById("su-user").value.trim();
+    const pass = document.getElementById("su-pass").value;
+    const email = document.getElementById("su-email").value.trim();
+    const number = document.getElementById("su-number").value.trim();
+    const btn = document.getElementById("btn-signup");
+    btn.disabled = true;
+    document.getElementById("signup-btn-text").innerHTML = '<span class="loader"></span>';
+
+    try {
+      const owners = await db.select("BD_USERS", `?select=SYSTEM&SYSTEM=eq.${pgEsc(system)}&LEVEL=eq.000&limit=1`);
+      if (!owners || owners.length === 0) {
+        throw new Error("Código de barbearia não encontrado. Confira com o dono.");
+      }
+      const existing = await db.select("BD_USERS", `?select=USER&USER=eq.${pgEsc(user)}&limit=1`);
+      if (existing && existing.length > 0) {
+        throw new Error("Esse nome de usuário já está em uso.");
+      }
+      const hash = await hashPassword(pass);
+      await db.insert("BD_USERS", {
+        USER: user, PASSWORD: hash, NAME: name, NUMBER: number, EMAIL: email, SYSTEM: system, LEVEL: "0", ACTIVE: true,
+      });
+      await db.insert("CLIENT_USER", {
+        USER: user, NAME: name, NUMBER: number, EMAIL: email, SYSTEM: system,
+        STATE: "sem_plano", TYPE_PAY: null, VALUE: 0,
+      });
+      toast("Conta criada! Faça login.", "success");
+      document.getElementById("form-signup").reset();
+      document.getElementById("go-login").click();
+    } catch (err) {
+      errBox.textContent = err.message;
+      errBox.classList.add("show");
+    } finally {
+      btn.disabled = false;
+      document.getElementById("signup-btn-text").textContent = "Criar conta";
+    }
+  });
+</script>
+</body>
+</html>
