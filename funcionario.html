@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Área do Funcionário · BarberOS</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="app-shell">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-mark">✂ <span id="sys-name">BarberOS</span></div>
+      <div class="brand-sub">Área do funcionário</div>
+    </div>
+
+    <a class="nav-item stripe-underline active" data-tab-btn="agenda">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
+      Minha agenda
+    </a>
+    <a class="nav-item stripe-underline hidden" id="nav-servicos" data-tab-btn="servicos">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6M9 6l9 9-3 3-9-9M3 21l4-1 10-10-3-3L4 17z"/></svg>
+      Serviços
+    </a>
+    <a class="nav-item stripe-underline hidden" id="nav-clientes" data-tab-btn="clientes">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>
+      Clientes
+    </a>
+    <a class="nav-item stripe-underline hidden" id="nav-bloqueios" data-tab-btn="bloqueios">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M5 5l14 14"/></svg>
+      Bloqueios
+    </a>
+    <a class="nav-item stripe-underline hidden" id="nav-produtos" data-tab-btn="produtos">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4M4 7l8 4m-8-4v10l8 4m0-10v10"/></svg>
+      Produtos
+    </a>
+    <a class="nav-item stripe-underline" data-tab-btn="config">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82"/></svg>
+      Configurações
+    </a>
+
+    <div class="nav-spacer"></div>
+    <a class="nav-item logout" id="btn-logout">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+      Sair
+    </a>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <button class="menu-toggle" id="menu-toggle">☰</button>
+        <div class="topbar-title" id="page-title">Minha agenda<span id="page-sub">Seus próximos atendimentos</span></div>
+      </div>
+      <div class="topbar-right">
+        <div class="bell-wrap">
+          <button class="bell-btn" id="bell-btn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>
+            <span class="bell-dot" id="bell-dot"></span>
+          </button>
+          <div class="notif-panel" id="notif-panel"></div>
+        </div>
+        <div class="avatar-chip">
+          <div class="avatar-circle" id="avatar-initials">--</div>
+          <div><div class="avatar-name" id="avatar-name">Carregando...</div><div class="avatar-role">Funcionário</div></div>
+        </div>
+      </div>
+    </header>
+
+    <main class="content">
+
+      <section class="tab-panel active" data-tab-panel="agenda">
+        <div class="section-head"><div><h2>Minha agenda</h2><p>Atendimentos marcados com você</p></div></div>
+        <div class="chip-row" style="margin-bottom:16px;" id="agenda-filter">
+          <div class="chip active" data-f="futuros">Futuros</div>
+          <div class="chip" data-f="hoje">Hoje</div>
+          <div class="chip" data-f="todos">Todos</div>
+        </div>
+        <div id="agenda-list"></div>
+      </section>
+
+      <section class="tab-panel" data-tab-panel="servicos">
+        <div class="section-head">
+          <div><h2>Serviços</h2><p>Tipos de serviço oferecidos pela barbearia</p></div>
+          <button class="btn btn-primary" id="btn-new-service">+ Novo serviço</button>
+        </div>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Nome</th><th>Preço</th><th>Duração</th><th>Status</th><th></th></tr></thead>
+          <tbody id="services-tbody"></tbody>
+        </table></div>
+      </section>
+
+      <section class="tab-panel" data-tab-panel="clientes">
+        <div class="section-head"><div><h2>Clientes</h2><p>Base de clientes da barbearia</p></div></div>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Nome</th><th>Telefone</th><th>E-mail</th><th>Plano</th><th>Status</th></tr></thead>
+          <tbody id="clients-tbody"></tbody>
+        </table></div>
+      </section>
+
+      <section class="tab-panel" data-tab-panel="bloqueios">
+        <div class="section-head"><div><h2>Bloqueios</h2><p>Bloqueie datas/horários da sua própria agenda</p></div></div>
+        <div class="grid grid-2" style="align-items:start;">
+          <div class="card">
+            <div class="field"><label>Data</label><input type="date" id="blk-date"></div>
+            <div class="field-row">
+              <div class="field"><label>Das</label><input type="time" id="blk-start"></div>
+              <div class="field"><label>Até</label><input type="time" id="blk-end"></div>
+            </div>
+            <div class="field"><label>Motivo (opcional)</label><input type="text" id="blk-reason" placeholder="Ex: consulta médica"></div>
+            <button class="btn btn-primary btn-block" id="btn-add-block">Bloquear horário</button>
+          </div>
+          <div class="card">
+            <h3 style="font-size:14px;margin-bottom:12px;">Meus bloqueios ativos</h3>
+            <div id="blocks-list"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="tab-panel" data-tab-panel="produtos">
+        <div class="section-head">
+          <div><h2>Produtos</h2><p>Produtos vendidos pela barbearia</p></div>
+          <button class="btn btn-primary" id="btn-new-product">+ Novo produto</button>
+        </div>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Nome</th><th>Preço</th><th>Estoque</th><th>Status</th><th></th></tr></thead>
+          <tbody id="products-tbody"></tbody>
+        </table></div>
+      </section>
+
+      <section class="tab-panel" data-tab-panel="config">
+        <div class="section-head"><div><h2>Configurações</h2><p>Altere sua senha de acesso</p></div></div>
+        <div class="card" style="max-width:420px;">
+          <div class="field"><label>Nova senha</label><input type="password" id="new-pass"></div>
+          <button class="btn btn-primary" id="btn-change-pass">Alterar senha</button>
+        </div>
+      </section>
+
+    </main>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-service">
+  <div class="modal">
+    <div class="modal-head"><h3 id="service-modal-title">Novo serviço</h3><button class="modal-close" onclick="closeModal('modal-service')">✕</button></div>
+    <div class="modal-body">
+      <input type="hidden" id="svc-id">
+      <div class="field"><label>Nome</label><input type="text" id="svc-name"></div>
+      <div class="field-row">
+        <div class="field"><label>Preço (R$)</label><input type="number" step="0.01" id="svc-price"></div>
+        <div class="field"><label>Duração (min)</label><input type="number" id="svc-duration"></div>
+      </div>
+      <div class="checkbox-row"><input type="checkbox" id="svc-active" checked><label for="svc-active">Serviço ativo</label></div>
+    </div>
+    <div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal('modal-service')">Cancelar</button><button class="btn btn-primary" id="btn-save-service">Salvar</button></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-product">
+  <div class="modal">
+    <div class="modal-head"><h3 id="product-modal-title">Novo produto</h3><button class="modal-close" onclick="closeModal('modal-product')">✕</button></div>
+    <div class="modal-body">
+      <input type="hidden" id="prd-id">
+      <div class="field"><label>Nome</label><input type="text" id="prd-name"></div>
+      <div class="field-row">
+        <div class="field"><label>Preço (R$)</label><input type="number" step="0.01" id="prd-price"></div>
+        <div class="field"><label>Estoque</label><input type="number" id="prd-stock"></div>
+      </div>
+      <div class="checkbox-row"><input type="checkbox" id="prd-active" checked><label for="prd-active">Produto ativo</label></div>
+    </div>
+    <div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal('modal-product')">Cancelar</button><button class="btn btn-primary" id="btn-save-product">Salvar</button></div>
+  </div>
+</div>
+
+<div id="toast-root"></div>
+
+<script src="js/supabase.js"></script>
+<script src="js/common.js"></script>
+<script src="js/funcionario.js"></script>
+</body>
+</html>

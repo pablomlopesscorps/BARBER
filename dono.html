@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Painel do Dono · BarberOS</title>
+<link rel="stylesheet" href="css/style.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
+</head>
+<body>
+
+<div class="app-shell">
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-mark">✂ <span id="sys-name">BarberOS</span></div>
+      <div class="brand-sub">Painel do dono</div>
+    </div>
+
+    <a class="nav-item stripe-underline active" data-tab-btn="dashboard">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 3v18h18M7 15l4-6 3 3 5-8"/></svg>
+      Dashboard
+    </a>
+    <a class="nav-item stripe-underline" data-tab-btn="agenda">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
+      Agenda geral
+    </a>
+    <a class="nav-item stripe-underline" data-tab-btn="funcionarios">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="8" r="3.2"/><path d="M2.5 20c0-3.5 3-5.5 6.5-5.5s6.5 2 6.5 5.5M16 8.5a3 3 0 100-6M19 14.5c2 .6 3 2 3 5.5"/></svg>
+      Funcionários
+    </a>
+    <a class="nav-item stripe-underline" data-tab-btn="servicos">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 9l6 6M9 6l9 9-3 3-9-9M3 21l4-1 10-10-3-3L4 17z"/></svg>
+      Serviços
+    </a>
+    <a class="nav-item stripe-underline" data-tab-btn="bloqueios">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M5 5l14 14"/></svg>
+      Bloqueios
+    </a>
+    <a class="nav-item stripe-underline" data-tab-btn="clientes">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg>
+      Clientes
+    </a>
+    <a class="nav-item stripe-underline" data-tab-btn="produtos">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4M4 7l8 4m-8-4v10l8 4m0-10v10"/></svg>
+      Produtos
+    </a>
+    <a class="nav-item stripe-underline" data-tab-btn="planos">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2l3 6 6 1-4.5 4.5L18 20l-6-3-6 3 1.5-6.5L3 9l6-1z"/></svg>
+      Planos
+    </a>
+    <a class="nav-item stripe-underline" data-tab-btn="config">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82"/></svg>
+      Configurações
+    </a>
+    <a class="nav-item stripe-underline" data-tab-btn="exportar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 19h16"/></svg>
+      Exportar dados
+    </a>
+
+    <div class="nav-spacer"></div>
+    <a class="nav-item logout" id="btn-logout">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+      Sair
+    </a>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <button class="menu-toggle" id="menu-toggle">☰</button>
+        <div class="topbar-title" id="page-title">Dashboard<span id="page-sub">Visão geral do negócio</span></div>
+      </div>
+      <div class="topbar-right">
+        <div class="bell-wrap">
+          <button class="bell-btn" id="bell-btn">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>
+            <span class="bell-dot" id="bell-dot"></span>
+          </button>
+          <div class="notif-panel" id="notif-panel"></div>
+        </div>
+        <div class="avatar-chip">
+          <div class="avatar-circle" id="avatar-initials">--</div>
+          <div><div class="avatar-name" id="avatar-name">Carregando...</div><div class="avatar-role">Dono</div></div>
+        </div>
+      </div>
+    </header>
+
+    <main class="content">
+
+      <!-- ===================== DASHBOARD ===================== -->
+      <section class="tab-panel active" data-tab-panel="dashboard">
+        <div class="section-head"><div><h2>Dashboard</h2><p>Visão geral do negócio</p></div></div>
+        <div class="grid grid-4" style="margin-bottom:20px;">
+          <div class="card stat-card"><div class="stat-label">Faturamento (mês)</div><div class="stat-value" id="kpi-revenue">R$ 0</div><div class="stat-sub" id="kpi-revenue-sub">—</div></div>
+          <div class="card stat-card"><div class="stat-label">Agendamentos hoje</div><div class="stat-value" id="kpi-today">0</div><div class="stat-sub">Concluídos + agendados</div></div>
+          <div class="card stat-card"><div class="stat-label">Clientes ativos</div><div class="stat-value" id="kpi-clients">0</div><div class="stat-sub" id="kpi-clients-sub">—</div></div>
+          <div class="card stat-card"><div class="stat-label">Ticket médio</div><div class="stat-value" id="kpi-ticket">R$ 0</div><div class="stat-sub">Por atendimento concluído</div></div>
+        </div>
+        <div class="grid grid-2">
+          <div class="card"><h3 style="font-size:14px;margin-bottom:14px;">Faturamento por serviço</h3><canvas id="chart-service" height="220"></canvas></div>
+          <div class="card"><h3 style="font-size:14px;margin-bottom:14px;">Agendamentos por funcionário</h3><canvas id="chart-employee" height="220"></canvas></div>
+        </div>
+      </section>
+
+      <!-- ===================== AGENDA GERAL ===================== -->
+      <section class="tab-panel" data-tab-panel="agenda">
+        <div class="section-head">
+          <div><h2>Agenda geral</h2><p>Todos os agendamentos da barbearia</p></div>
+          <input type="date" id="agenda-date-filter" style="width:auto;">
+        </div>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Data</th><th>Hora</th><th>Cliente</th><th>Funcionário</th><th>Serviço</th><th>Status</th></tr></thead>
+          <tbody id="agenda-geral-tbody"></tbody>
+        </table></div>
+      </section>
+
+      <!-- ===================== FUNCIONÁRIOS ===================== -->
+      <section class="tab-panel" data-tab-panel="funcionarios">
+        <div class="section-head">
+          <div><h2>Funcionários</h2><p>Cadastre e gerencie sua equipe</p></div>
+          <button class="btn btn-primary" id="btn-new-emp">+ Novo funcionário</button>
+        </div>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Nome</th><th>Usuário</th><th>Telefone</th><th>Status</th><th></th></tr></thead>
+          <tbody id="emp-tbody"></tbody>
+        </table></div>
+      </section>
+
+      <!-- ===================== SERVIÇOS ===================== -->
+      <section class="tab-panel" data-tab-panel="servicos">
+        <div class="section-head">
+          <div><h2>Serviços</h2><p>Tipos de serviço oferecidos</p></div>
+          <button class="btn btn-primary" id="btn-new-service">+ Novo serviço</button>
+        </div>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Nome</th><th>Preço</th><th>Duração</th><th>Status</th><th></th></tr></thead>
+          <tbody id="services-tbody"></tbody>
+        </table></div>
+      </section>
+
+      <!-- ===================== BLOQUEIOS ===================== -->
+      <section class="tab-panel" data-tab-panel="bloqueios">
+        <div class="section-head"><div><h2>Bloqueios de horário</h2><p>Bloqueie datas/horários gerais ou de um funcionário específico</p></div></div>
+        <div class="grid grid-2" style="align-items:start;">
+          <div class="card">
+            <div class="field"><label>Funcionário</label><select id="blk-employee"><option value="">Toda a barbearia (geral)</option></select></div>
+            <div class="field"><label>Data</label><input type="date" id="blk-date"></div>
+            <div class="field-row">
+              <div class="field"><label>Das</label><input type="time" id="blk-start"></div>
+              <div class="field"><label>Até</label><input type="time" id="blk-end"></div>
+            </div>
+            <div class="field"><label>Motivo (opcional)</label><input type="text" id="blk-reason"></div>
+            <button class="btn btn-primary btn-block" id="btn-add-block">Bloquear horário</button>
+            <p class="help-text">Agendamentos existentes nesse intervalo serão cancelados automaticamente e o cliente será notificado.</p>
+          </div>
+          <div class="card">
+            <h3 style="font-size:14px;margin-bottom:12px;">Bloqueios ativos</h3>
+            <div id="blocks-list"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================== CLIENTES ===================== -->
+      <section class="tab-panel" data-tab-panel="clientes">
+        <div class="section-head">
+          <div><h2>Clientes</h2><p>Cadastre e gerencie clientes</p></div>
+          <button class="btn btn-primary" id="btn-new-client">+ Novo cliente</button>
+        </div>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Nome</th><th>Telefone</th><th>E-mail</th><th>Plano</th><th>Status</th><th></th></tr></thead>
+          <tbody id="clients-tbody"></tbody>
+        </table></div>
+      </section>
+
+      <!-- ===================== PRODUTOS ===================== -->
+      <section class="tab-panel" data-tab-panel="produtos">
+        <div class="section-head">
+          <div><h2>Produtos</h2><p>Itens à venda na barbearia</p></div>
+          <div style="display:flex;gap:10px;align-items:center;">
+            <label class="checkbox-row" style="padding:0;"><input type="checkbox" id="toggle-products"><span style="color:var(--text-muted);font-size:13px;margin-left:6px;">Mostrar para clientes</span></label>
+            <button class="btn btn-primary" id="btn-new-product">+ Novo produto</button>
+          </div>
+        </div>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Nome</th><th>Preço</th><th>Estoque</th><th>Status</th><th></th></tr></thead>
+          <tbody id="products-tbody"></tbody>
+        </table></div>
+      </section>
+
+      <!-- ===================== PLANOS ===================== -->
+      <section class="tab-panel" data-tab-panel="planos">
+        <div class="section-head">
+          <div><h2>Planos</h2><p>Planos de assinatura oferecidos aos clientes</p></div>
+          <button class="btn btn-primary" id="btn-new-plan">+ Novo plano</button>
+        </div>
+        <div class="table-wrap"><table>
+          <thead><tr><th>Nome</th><th>Preço</th><th>Descrição</th><th>Status</th><th></th></tr></thead>
+          <tbody id="plans-tbody"></tbody>
+        </table></div>
+      </section>
+
+      <!-- ===================== CONFIGURAÇÕES ===================== -->
+      <section class="tab-panel" data-tab-panel="config">
+        <div class="section-head"><div><h2>Configurações do sistema</h2><p>Nome do sistema e horário geral de funcionamento</p></div></div>
+        <div class="grid grid-2" style="align-items:start;">
+          <div class="card">
+            <div class="field"><label>Nome do sistema</label><input type="text" id="cfg-sysname"></div>
+            <div class="field"><label>Intervalo entre horários (minutos)</label><input type="number" id="cfg-interval" value="30"></div>
+            <div class="field"><label>Código da barbearia (para clientes se cadastrarem)</label><input type="text" id="cfg-code" disabled></div>
+            <button class="btn btn-primary" id="btn-save-general">Salvar</button>
+          </div>
+          <div class="card">
+            <h3 style="font-size:14px;margin-bottom:14px;">Horário geral de funcionamento</h3>
+            <div id="hours-editor"></div>
+            <button class="btn btn-primary" id="btn-save-hours" style="margin-top:10px;">Salvar horários</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================== EXPORTAR ===================== -->
+      <section class="tab-panel" data-tab-panel="exportar">
+        <div class="section-head"><div><h2>Exportar dados</h2><p>Baixe seus dados em CSV a qualquer momento</p></div></div>
+        <div class="grid grid-4">
+          <div class="card"><h3 style="font-size:14px;margin-bottom:10px;">Usuários</h3><button class="btn btn-outline btn-block" data-export="BD_USERS">Exportar CSV</button></div>
+          <div class="card"><h3 style="font-size:14px;margin-bottom:10px;">Clientes</h3><button class="btn btn-outline btn-block" data-export="CLIENT_USER">Exportar CSV</button></div>
+          <div class="card"><h3 style="font-size:14px;margin-bottom:10px;">Agendamentos</h3><button class="btn btn-outline btn-block" data-export="APPOINTMENTS">Exportar CSV</button></div>
+          <div class="card"><h3 style="font-size:14px;margin-bottom:10px;">Produtos</h3><button class="btn btn-outline btn-block" data-export="PRODUCTS">Exportar CSV</button></div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+</div>
+
+<!-- Modal funcionário -->
+<div class="modal-overlay" id="modal-emp">
+  <div class="modal modal-wide">
+    <div class="modal-head"><h3 id="emp-modal-title">Novo funcionário</h3><button class="modal-close" onclick="closeModal('modal-emp')">✕</button></div>
+    <div class="modal-body">
+      <input type="hidden" id="emp-user-original">
+      <div class="field-row">
+        <div class="field"><label>Nome</label><input type="text" id="emp-name"></div>
+        <div class="field"><label>Usuário (login)</label><input type="text" id="emp-user"></div>
+      </div>
+      <div class="field-row">
+        <div class="field"><label>Senha</label><input type="password" id="emp-pass" placeholder="Deixe em branco para não alterar"></div>
+        <div class="field"><label>Telefone</label><input type="tel" id="emp-number"></div>
+      </div>
+      <div class="field"><label>E-mail</label><input type="email" id="emp-email"></div>
+
+      <h4 style="font-size:13px;color:var(--text-muted);margin:18px 0 10px;text-transform:uppercase;letter-spacing:.5px;">Permissões</h4>
+      <div class="grid grid-2">
+        <div class="checkbox-row"><input type="checkbox" id="perm-servicos"><label for="perm-servicos">Gerenciar serviços</label></div>
+        <div class="checkbox-row"><input type="checkbox" id="perm-clientes"><label for="perm-clientes">Ver clientes</label></div>
+        <div class="checkbox-row"><input type="checkbox" id="perm-bloqueios"><label for="perm-bloqueios">Bloquear própria agenda</label></div>
+        <div class="checkbox-row"><input type="checkbox" id="perm-produtos"><label for="perm-produtos">Gerenciar produtos</label></div>
+      </div>
+
+      <h4 style="font-size:13px;color:var(--text-muted);margin:18px 0 10px;text-transform:uppercase;letter-spacing:.5px;">Horário de trabalho</h4>
+      <div id="emp-hours-editor"></div>
+
+      <div class="checkbox-row" style="margin-top:10px;"><input type="checkbox" id="emp-active" checked><label for="emp-active">Funcionário ativo</label></div>
+    </div>
+    <div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal('modal-emp')">Cancelar</button><button class="btn btn-primary" id="btn-save-emp">Salvar</button></div>
+  </div>
+</div>
+
+<!-- Modal serviço -->
+<div class="modal-overlay" id="modal-service">
+  <div class="modal">
+    <div class="modal-head"><h3 id="service-modal-title">Novo serviço</h3><button class="modal-close" onclick="closeModal('modal-service')">✕</button></div>
+    <div class="modal-body">
+      <input type="hidden" id="svc-id">
+      <div class="field"><label>Nome</label><input type="text" id="svc-name"></div>
+      <div class="field-row">
+        <div class="field"><label>Preço (R$)</label><input type="number" step="0.01" id="svc-price"></div>
+        <div class="field"><label>Duração (min)</label><input type="number" id="svc-duration"></div>
+      </div>
+      <div class="checkbox-row"><input type="checkbox" id="svc-active" checked><label for="svc-active">Serviço ativo</label></div>
+    </div>
+    <div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal('modal-service')">Cancelar</button><button class="btn btn-primary" id="btn-save-service">Salvar</button></div>
+  </div>
+</div>
+
+<!-- Modal cliente -->
+<div class="modal-overlay" id="modal-client">
+  <div class="modal modal-wide">
+    <div class="modal-head"><h3 id="client-modal-title">Novo cliente</h3><button class="modal-close" onclick="closeModal('modal-client')">✕</button></div>
+    <div class="modal-body">
+      <input type="hidden" id="cli-user-original">
+      <div class="field-row">
+        <div class="field"><label>Nome</label><input type="text" id="cli-name"></div>
+        <div class="field"><label>Usuário (login)</label><input type="text" id="cli-user"></div>
+      </div>
+      <div class="field-row">
+        <div class="field"><label>Senha</label><input type="password" id="cli-pass" placeholder="Deixe em branco para não alterar"></div>
+        <div class="field"><label>Telefone</label><input type="tel" id="cli-number"></div>
+      </div>
+      <div class="field"><label>E-mail</label><input type="email" id="cli-email"></div>
+      <div class="field-row">
+        <div class="field"><label>Status</label>
+          <select id="cli-state"><option value="sem_plano">Sem plano</option><option value="ativo">Ativo</option><option value="pendente">Pendente</option><option value="inativo">Inativo</option></select>
+        </div>
+        <div class="field"><label>Ativo no sistema</label>
+          <select id="cli-active"><option value="true">Sim</option><option value="false">Não</option></select>
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal('modal-client')">Cancelar</button><button class="btn btn-primary" id="btn-save-client">Salvar</button></div>
+  </div>
+</div>
+
+<!-- Modal produto -->
+<div class="modal-overlay" id="modal-product">
+  <div class="modal">
+    <div class="modal-head"><h3 id="product-modal-title">Novo produto</h3><button class="modal-close" onclick="closeModal('modal-product')">✕</button></div>
+    <div class="modal-body">
+      <input type="hidden" id="prd-id">
+      <div class="field"><label>Nome</label><input type="text" id="prd-name"></div>
+      <div class="field-row">
+        <div class="field"><label>Preço (R$)</label><input type="number" step="0.01" id="prd-price"></div>
+        <div class="field"><label>Estoque</label><input type="number" id="prd-stock"></div>
+      </div>
+      <div class="checkbox-row"><input type="checkbox" id="prd-active" checked><label for="prd-active">Produto ativo</label></div>
+    </div>
+    <div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal('modal-product')">Cancelar</button><button class="btn btn-primary" id="btn-save-product">Salvar</button></div>
+  </div>
+</div>
+
+<!-- Modal plano -->
+<div class="modal-overlay" id="modal-plan">
+  <div class="modal">
+    <div class="modal-head"><h3 id="plan-modal-title">Novo plano</h3><button class="modal-close" onclick="closeModal('modal-plan')">✕</button></div>
+    <div class="modal-body">
+      <input type="hidden" id="pln-id">
+      <div class="field"><label>Nome</label><input type="text" id="pln-name"></div>
+      <div class="field"><label>Preço mensal (R$)</label><input type="number" step="0.01" id="pln-price"></div>
+      <div class="field"><label>Descrição</label><textarea id="pln-desc" rows="3"></textarea></div>
+      <div class="checkbox-row"><input type="checkbox" id="pln-active" checked><label for="pln-active">Plano ativo</label></div>
+    </div>
+    <div class="modal-foot"><button class="btn btn-ghost" onclick="closeModal('modal-plan')">Cancelar</button><button class="btn btn-primary" id="btn-save-plan">Salvar</button></div>
+  </div>
+</div>
+
+<div id="toast-root"></div>
+
+<script src="js/supabase.js"></script>
+<script src="js/common.js"></script>
+<script src="js/dono.js"></script>
+</body>
+</html>
